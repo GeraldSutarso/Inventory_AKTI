@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Collection;
 class HasMany extends HasOneOrMany
 {
     /**
+     * Convert the relationship to a "has one" relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function one()
+    {
+        return HasOne::noConstraints(fn () => new HasOne(
+            $this->getQuery(),
+            $this->parent,
+            $this->foreignKey,
+            $this->localKey
+        ));
+    }
+
+    /**
      * Get the results of the relationship.
      *
      * @return mixed
@@ -21,7 +36,7 @@ class HasMany extends HasOneOrMany
     /**
      * Initialize the relation on a set of models.
      *
-     * @param  array   $models
+     * @param  array  $models
      * @param  string  $relation
      * @return array
      */
@@ -37,7 +52,7 @@ class HasMany extends HasOneOrMany
     /**
      * Match the eagerly loaded results to their parents.
      *
-     * @param  array   $models
+     * @param  array  $models
      * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @param  string  $relation
      * @return array

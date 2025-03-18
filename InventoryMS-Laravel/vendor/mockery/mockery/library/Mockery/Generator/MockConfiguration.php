@@ -1,21 +1,11 @@
 <?php
+
 /**
- * Mockery
+ * Mockery (https://docs.mockery.io/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://github.com/padraic/mockery/blob/master/LICENSE
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to padraic@php.net so we can send you a copy immediately.
- *
- * @category   Mockery
- * @package    Mockery
- * @copyright  Copyright (c) 2010 Pádraic Brady (http://blog.astrumfutura.com)
- * @license    http://github.com/padraic/mockery/blob/master/LICENSE New BSD License
+ * @copyright https://github.com/mockery/mockery/blob/HEAD/COPYRIGHT.md
+ * @license   https://github.com/mockery/mockery/blob/HEAD/LICENSE BSD 3-Clause License
+ * @link      https://github.com/mockery/mockery for the canonical source repository
  */
 
 namespace Mockery\Generator;
@@ -525,34 +515,6 @@ class MockConfiguration
             $names[] = $method->getName();
             return true;
         });
-
-        // In HHVM, class methods can be annotated with the built-in
-        // <<__Memoize>> attribute (similar to a Python decorator),
-        // which builds an LRU cache of method arguments and their
-        // return values.
-        // https://docs.hhvm.com/hack/attributes/special#__memoize
-        //
-        // HHVM implements this behavior by inserting a private helper
-        // method into the class at runtime which is named as the
-        // method to be memoized, suffixed by `$memoize_impl`.
-        // https://github.com/facebook/hhvm/blob/6aa46f1e8c2351b97d65e67b73e26f274a7c3f2e/hphp/runtime/vm/func.cpp#L364
-        //
-        // Ordinarily, PHP does not all allow the `$` token in method
-        // names, but since the memoization helper is inserted at
-        // runtime (and not in userland), HHVM allows it.
-        //
-        // We use code generation and eval() for some types of mocks,
-        // so to avoid syntax errors from these memoization helpers,
-        // we must filter them from our list of class methods.
-        //
-        // This effectively disables the memoization behavior in HHVM,
-        // but that's preferable to failing catastrophically when
-        // attempting to mock a class using the attribute.
-        if (defined('HHVM_VERSION')) {
-            $methods = array_filter($methods, function ($method) {
-                return strpos($method->getName(), '$memoize_impl') === false;
-            });
-        }
 
         return $this->allMethods = $methods;
     }

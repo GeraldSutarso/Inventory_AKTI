@@ -34,19 +34,9 @@ trait FileHelpers
     }
 
     /**
-     * Get the file's extension supplied by the client.
-     *
-     * @return string
-     */
-    public function clientExtension()
-    {
-        return $this->guessClientExtension();
-    }
-
-    /**
      * Get a filename for the file.
      *
-     * @param  string  $path
+     * @param  string|null  $path
      * @return string
      */
     public function hashName($path = null)
@@ -62,5 +52,15 @@ trait FileHelpers
         }
 
         return $path.$hash.$extension;
+    }
+
+    /**
+     * Get the dimensions of the image (if applicable).
+     *
+     * @return array|null
+     */
+    public function dimensions()
+    {
+        return @getimagesize($this->getRealPath());
     }
 }

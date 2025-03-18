@@ -3,26 +3,24 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class Role
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next, $role): Response
     {
-        if (is_array($roles)) {
-            foreach ($roles as $role) {
-                if (Auth::user()->role == $role) {
-                    return $next($request);
-                }
-            }
-            return abort(401, 'Unauthorized');
+        $user = Auth::user();
+        if($user->role === $role){
+         return $next($request);
+        } else {
+            return redirect('/');
         }
     }
 }
