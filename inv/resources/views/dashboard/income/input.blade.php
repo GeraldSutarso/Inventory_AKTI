@@ -15,7 +15,12 @@
                     <div class="border">
                         {{-- select with choice js --}}
                         <select name="product_id" class="select-product text-black" id="">
+                            <option value="">-- Pilih Barang --</option>
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
                         </select>
+                        
                     </div>
                 </div>
             </div>

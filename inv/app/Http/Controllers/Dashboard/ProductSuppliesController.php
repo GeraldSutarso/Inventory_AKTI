@@ -22,13 +22,14 @@ class ProductSuppliesController extends Controller
 
     public function createIncome(){
         $products = Product::all();
-        return view('dashboard.income.input');
+        return view('dashboard.income.input', compact('products'));
     }
-
+    
     public function createOutcome(){
         $products = Product::all();
-        return view('dashboard.outcome.input');
+        return view('dashboard.outcome.input', compact('products'));
     }
+    
 
     public function storeIncome(Request $request) {
         $this->validate($request, [
