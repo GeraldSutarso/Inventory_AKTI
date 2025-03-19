@@ -105,12 +105,22 @@ class ProductSuppliesController extends Controller
 
     public function editIncome ($id) {
         $productIncome = ProductSupplies::findOrFail($id);
-        return view('dashboard.income.update', ['productIncome'=>$productIncome]);
+        $products = Product::all(); // Ambil semua produk
+    
+        return view('dashboard.income.update', [
+            'productIncome' => $productIncome,
+            'products' => $products // Kirim ke view
+        ]);
     }
-
+    
     public function editOutCome ($id) {
         $productOutcome = ProductSupplies::findOrFail($id);
-        return view('dashboard.outcome.update', ['productOutcome'=>$productOutcome]);
+        $products = Product::all(); // Ambil semua produk
+    
+        return view('dashboard.outcome.update', [
+            'productOutcome' => $productOutcome,
+            'products' => $products // Kirim ke view
+        ]);
     }
 
     public function updateIncome(Request $request, $id) {

@@ -14,7 +14,13 @@
                     <label class="text-sm text-gray-600"  for="name">Nama Barang</label>
                     <div class="border">
                         {{-- select with choice js --}}
-                        <select name="product_id" data-id-product="{{$productOutcome->product_id}}"  class="select-product text-black" id="">
+                        <select name="product_id" class="select-product text-black">
+                            @foreach($products as $product)
+                                <option value="{{ $product->id }}" 
+                                    {{ $product->id == $productOutcome->product_id ? 'selected' : '' }}>
+                                    {{ $product->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
