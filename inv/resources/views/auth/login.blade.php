@@ -7,81 +7,51 @@
     @vite('resources/css/app.css')
     <title>Login</title>
 </head>
-<body>
-    <div class="bg-slate-700 h-screen flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg w-96 md:w-1/4">
+<body class="bg-gradient-to-br from-gray-50 to-gray-200 h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96 md:w-1/3 transition-all">
         <div class="text-center">
-          <img
-            src="/img/Favicon akti.png"
-            alt="logo"
-            class="w-10 h-10 rounded mx-auto block object-cover"
-          />
-          <p class="text-sm text-slate-400 mt-2 font-semibold">
-            Dashboard
-          </p>
-          <p class="font-bold text-xl mt-5">AKTI INVENTORY</p>
+            <img src="/img/Favicon akti.png" alt="logo" class="w-14 h-14 rounded-full mx-auto object-cover shadow-md" />
+            <p class="text-gray-500 mt-3 font-medium">Dashboard</p>
+            <p class="font-bold text-2xl text-gray-700 mt-3">AKTI INVENTORY</p>
         </div>
-        <div class="mt-10">
-          @if (session()->has('error'))
-           <div class="bg-red-500 p-2">
-              <p class="text-xs text-center text-white">{{session()->get('error')}}</p>
-          </div>
-          @endif
-          <form action="{{route('login')}}" method="post">
-              @csrf
-            <label
-              class="text-sm text-slate-400 font-semibold uppercase mt-5 inline-block"
-              for="email"
-            >
-              Email
-            </label>
-            <div class="border @error('email') border-red-500 @enderror mt-2 p-2"
-            >
-              <input
-                id="email"
-                class="w-full h-full text-sm focus:outline-none"
-                type="email"
-                name="email"
-                value="{{old('email')}}"
-                placeholder="Email address"
-              />
-            </div>
-            @error('email') <p class="italic mt-1 text-red-500 text-xs">{{$message}}</p> @enderror
-            <div class="flex justify-between mt-5">
-              <label
-                class="text-sm text-slate-400 font-semibold uppercase"
-                for="password"
-              >
-                Password
-              </label>
-              <a class="text-xs text-slate-400" href="">
-                Forgot password?
-              </a>
-            </div>
-            <div
-            class="border mt-2 p-2 @error('password') border-red-500 @enderror"
-            >
-              <input
-                id="password"
-                class="w-full h-full text-sm focus:outline-none"
-                type="password"
-                name="password"
-                placeholder="Password"
-              />
-            </div>
-            @error('password') <p class="italic text-red-500 text-xs">{{$message}}</p> @enderror
-            <button
-              class="bg-blue-700 text-white text-center w-full mt-5 rounded-lg py-2 text-sm"
-            >
-              Log in
-            </button>
-            <p class="text-center text-xs text-slate-400 mt-5">
-              Dont have an account?
-              <span class="text-teal-500 font-semibold">Sign Up</span>
-            </p>
-          </form>
+        <div class="mt-8">
+            @if (session()->has('error'))
+                <div class="bg-red-500 text-white text-xs p-2 rounded text-center">
+                    {{ session()->get('error') }}
+                </div>
+            @endif
+            <form action="{{ route('login') }}" method="post" class="mt-5">
+                @csrf
+                <label class="text-gray-500 font-semibold text-sm" for="email">Email</label>
+                <div class="border rounded-lg mt-2 p-3 focus-within:ring-2 focus-within:ring-blue-400">
+                    <input id="email" class="w-full text-sm focus:outline-none" type="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" />
+                </div>
+                @error('email')
+                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
+
+                <label class="text-gray-500 font-semibold text-sm mt-4 inline-block" for="password">Password</label>
+                <div class="border rounded-lg mt-2 p-3 focus-within:ring-2 focus-within:ring-blue-400">
+                    <input id="password" class="w-full text-sm focus:outline-none" type="password" name="password" placeholder="Enter your password" />
+                </div>
+                @error('password')
+                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                @enderror
+                
+                <div class="flex justify-between items-center mt-3">
+                    <a href="#" class="text-xs text-blue-500 hover:underline">Forgot password?</a>
+                </div>
+                
+                <button class="bg-blue-600 hover:bg-blue-700 text-white text-center w-full mt-5 rounded-lg py-2 text-sm font-semibold shadow-md transition-all">
+                    Log in
+                </button>
+                
+                <p class="text-center text-xs text-gray-500 mt-5">
+                    Don't have an account?
+                    <a href="#" class="text-blue-500 font-semibold hover:underline">Sign Up</a>
+                </p>
+            </form>
         </div>
-      </div>
     </div>
 </body>
 </html>

@@ -1,64 +1,63 @@
 @extends('layouts.main')
 
 @section('container')
+<div class="container mx-auto px-4 py-6">
+    <!-- Toast Notification -->
+    @if (session('message'))
+        <div id="toast-container" class="fixed top-5 right-5 z-50 bg-green-500 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md">
+            {{ session('message') }}
+        </div>
+    @endif
 
-@if (session('message'))
-   <div id="toast-container" class="hidden fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-green-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
-    <div class=" text-green-400 text-sm font-bold capitalize">{{session()->get('message')}}</div>
-</div>
-@endif
-    <div class="container px-4">
-        <div class="bg-white mt-5 p-5 rounded-lg">
-            <div class="flex justify-between">
-                <div class="text-left">
-                    <h2 class="text-gray-600 font-bold">Data Kategori</h2>
-                    <a href="/input-kategori" class="text-sm bg-gray-700 text-white inline-block mt-2 px-2 py-1">Input Kategori</a>
-                    <a  class="text-sm bg-gray-700 text-white inline-block mt-2 px-2 py-1" href="/excel/kategori">Export Excel</a>
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="flex flex-wrap justify-between items-center mb-4">
+            <div>
+                <h2 class="text-xl font-bold text-gray-700">Data Kategori</h2>
+                <div class="mt-2 flex gap-2">
+                    <a href="/input-kategori" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Tambah Kategori</a>
+                    <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Export Excel</a>
                 </div>
-                <form method="get" action="/kategori" class="form">
-                    <div class="flex">
-                        <div class="border p-1 px-2 rounded-l">
-                          <input id="search" name="search" class="focus:outline-none text-sm" type="text" placeholder="search">
-                        </div>
-                        <button type="submit" class="text-sm bg-gray-700 p-2 rounded-r text-white h-full">cari</button>
-                    </div>
-                </form>
             </div>
+            <form method="get" action="/kategori" class="flex items-center border rounded-lg overflow-hidden">
+                <input id="search" name="search" class="px-4 py-2 text-gray-600 focus:outline-none" type="text" placeholder="Cari...">
+                <button type="submit" class="bg-gray-700 text-white px-4 py-2 hover:bg-gray-800 transition">Cari</button>
+            </form>
+        </div>
 
-            <table class="w-full mt-5 text-sm text-gray-600">
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-gray-700 border rounded-lg overflow-hidden">
                 <thead>
-                    <tr class="font-bold border-b-2 p-2">
-                        <td class="p-2">No</td>
-                        <td class="p-2">Nama Kategori</td>
-                        <td class="p-2">Aksi</td>
+                    <tr class="bg-gray-100 text-left font-semibold">
+                        <th class="p-3">No</th>
+                        <th class="p-3">Nama Kategori</th>
+                        <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $noCategory = 1;
-                    @endphp
+                    @php $noCategory = 1; @endphp
                     @foreach ($categories as $category)
-                        <tr class="border-b p-2">
-                        <td class="p-2">{{$noCategory}}</td>
-                        <td class="p-2">{{$category->name}}</td>
-                        <td class="p-2 flex gap-2">
-                            <button data-id="{{$category->id}}" class="btn-delete-category bg-red-500 py-1 px-4 rounded text-white">
-                                <i class="ri-delete-bin-line"></i>
-                            </button>
-                            <a href="/ubah-kategori/{{$category->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
-                                <i class="ri-edit-box-line"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @php
-                        $noCategory++;
-                    @endphp
+                        <tr class="border-t hover:bg-gray-50 transition">
+                            <td class="p-3">{{ $noCategory }}</td>
+                            <td class="p-3">{{ $category->name }}</td>
+                            <td class="p-3 flex justify-center gap-3">
+                                <button data-id="{{ $category->id }}" class="btn-delete-category bg-red-500 text-white px-4 py-1 rounded shadow hover:bg-red-600 transition">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                                <a href="/ubah-kategori/{{ $category->id }}" class="bg-yellow-400 text-white px-4 py-1 rounded shadow hover:bg-yellow-500 transition">
+                                    <i class="ri-edit-box-line"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @php $noCategory++; @endphp
                     @endforeach
                 </tbody>
             </table>
-            <div class="mt-5">
-                {{$categories->links('pagination::tailwind')}}
-            </div>
+        </div>
+        <!-- Pagination -->
+        <div class="mt-5 flex justify-center">
+            {{ $categories->links('pagination::tailwind') }}
         </div>
     </div>
+</div>
 @endsection

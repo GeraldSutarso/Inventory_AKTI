@@ -2,28 +2,27 @@
 
 @section('container')
 <div class="container px-4">
-    <div class="bg-white p-5 mt-5 rounded-lg">
-        <div class="flex">
-            <h2 class="text-gray-600 font-bold">Input Data Kategori</h2>
+    <div class="bg-white p-6 mt-5 rounded-lg shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-gray-700 font-bold text-lg">Input Data Kategori</h2>
+            <a href="/kategori" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600 transition">Back</a>
         </div>
 
-        <form action="/input-kategori" method="POST" class="w-1/2 mt-5">
+        <form action="/input-kategori" method="POST" class="w-full max-w-md mx-auto">
             @csrf
-            <div class="mt-3">
-                <label class="text-sm text-gray-600" for="name">Nama Kategori</label>
-                <div class="border-2 p-1 @error('name')  border-red-400  @enderror">
-                    <input name="name" value="{{old('name')}}" class="w-full h-full focus:outline-none text-sm" id="name" type="text">
+            <div class="mb-4">
+                <label class="block text-sm text-gray-700 font-semibold" for="name">Nama Kategori</label>
+                <div class="border-2 p-2 rounded-lg @error('name') border-red-400 @enderror">
+                    <input name="name" value="{{old('name')}}" class="w-full focus:outline-none text-sm p-1" id="name" type="text" placeholder="Masukkan nama kategori">
                 </div>
                 @error('name')
                     <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
                 @enderror
             </div>
-            <div class="mt-3">
-                <button class="bg-gray-600 text-white w-full p-2 rounded text-sm">Simpan Data</button>
+            <div class="mt-4">
+                <button class="bg-blue-600 text-white w-full py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition">Simpan Data</button>
             </div>
-        </div>
-    </form>
+        </form>
     </div>
 </div>
 @endsection
-
