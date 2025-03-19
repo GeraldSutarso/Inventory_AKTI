@@ -1,51 +1,44 @@
 @extends('layouts.main')
 
 @section('container')
-<div class="container px-4">
-    <div class="bg-white p-5 mt-5 rounded-lg">
-        <div class="flex">
-            <h2 class="text-gray-600 font-bold">Input Data Barang Masuk</h2>
+<div class="container mx-auto px-4">
+    <div class="bg-white p-6 mt-5 rounded-lg shadow-lg max-w-lg mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-gray-700 font-bold text-xl">Input Data Barang Masuk</h2>
+            <a href="/barang-masuk" class="flex items-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm shadow-md transition">
+                <i class="ri-arrow-left-line mr-2"></i> Kembali
+            </a>
         </div>
-
-        <form action="/input-barang-masuk" method="POST" class="w-1/2 mt-5">
+        
+        <form action="/input-barang-masuk" method="POST" class="w-full">
             @csrf
-            <div class="flex gap-1 mt-3">
-                <div class="w-full">
-                    <label class="text-sm text-gray-600"  for="name">Nama Barang</label>
-                    <div class="border">
-                        {{-- select with choice js --}}
-                        <select name="product_id" class="select-product text-black" id="">
-                            <option value="">-- Pilih Barang --</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+            <div class="mb-4">
+                <label class="text-sm text-gray-700 font-semibold" for="product_id">Nama Barang</label>
+                <select name="product_id" class="border border-gray-300 rounded-md w-full p-2 focus:ring-2 focus:ring-blue-500 transition" required>
+                    <option value="">-- Pilih Barang --</option>
+                    @foreach($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="mt-3">
-                <label class="text-sm text-gray-600" for="quantity">Jumlah Barang Masuk</label>
-                <div class="@error('quantity')  border-red-400  @enderror border-2 p-1">
-                    <input name="quantity" autocomplete="off" class="text-sm text-black w-full h-full focus:outline-none" id="quantity" type="number">
-                </div>
+            <div class="mb-4">
+                <label class="text-sm text-gray-700 font-semibold" for="quantity">Jumlah Barang Masuk</label>
+                <input name="quantity" autocomplete="off" class="border border-gray-300 rounded-md w-full p-2 focus:ring-2 focus:ring-blue-500 transition" id="quantity" type="number" required>
                 @error('quantity')
-                    <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
+                    <p class="text-red-500 text-sm mt-1">{{$message}}</p>
                 @enderror
             </div>
-            <div class="mt-3">
-                <label class="text-sm text-gray-600" for="date">Tanggal</label>
-                <div class="@error('date')  border-red-400  @enderror border-2 p-1">
-                    <input type="date" name="date" class="text-sm text-black w-full h-full focus:outline-none" id="date" type="text">
-                </div>
-                 @error('date')
-                    <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
+            <div class="mb-4">
+                <label class="text-sm text-gray-700 font-semibold" for="date">Tanggal</label>
+                <input type="date" name="date" class="border border-gray-300 rounded-md w-full p-2 focus:ring-2 focus:ring-blue-500 transition" id="date" required>
+                @error('date')
+                    <p class="text-red-500 text-sm mt-1">{{$message}}</p>
                 @enderror
             </div>
-            <div class="mt-3">
-                <button class="bg-gray-600 text-white w-full p-2 rounded text-sm">Simpan Data</button>
+            <div class="flex gap-2">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white w-full p-2 rounded-md shadow-md text-sm transition">Simpan Data</button>
             </div>
-        </div>
-    </form>
+        </form>
     </div>
 </div>
 @endsection

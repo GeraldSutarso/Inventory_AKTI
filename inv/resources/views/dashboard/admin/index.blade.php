@@ -3,65 +3,70 @@
 @section('container')
 
 @if (session('message'))
-   <div id="toast-container" class="hidden fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-green-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
-    <div class=" text-green-400 text-sm font-bold capitalize">{{session()->get('message')}}</div>
-</div>
+    <div id="toast-container" class="fixed z-50 right-5 top-5 flex items-center w-full max-w-xs p-4 text-sm text-white bg-green-500 rounded-lg shadow-lg opacity-0 transition-opacity duration-300" role="alert">
+        <span class="font-semibold">{{ session()->get('message') }}</span>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let toast = document.getElementById('toast-container');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        });
+    </script>
 @endif
-    <div class="container px-4">
-        <div class="bg-white mt-5 p-5 rounded-lg">
-            <div class="flex justify-between">
-                <div class="text-left">
-                    <h2 class="text-gray-600 font-bold">Data Admin</h2>
-                    <a href="/input-admin" class="text-sm bg-gray-700 text-white block mt-2 px-2 py-1 rounded">Tambah Admin</a>
-                </div>
-                <form method="get" action="/admin" class="form">
-                    <div class="flex">
-                        <div class="border p-1 px-2 rounded-l">
-                          <input id="search" name="search" class="focus:outline-none text-sm" type="text" placeholder="search">
-                        </div>
-                        <button type="submit" class="text-sm bg-gray-700 p-2 rounded-r text-white h-full">cari</button>
-                    </div>
-                </form>
-            </div>
 
-            <table class="w-full mt-5 text-sm text-gray-600">
+<div class="container mx-auto px-4">
+    <div class="bg-white shadow-md rounded-lg p-6 mt-5">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h2 class="text-lg font-bold text-gray-700">Data Admin</h2>
+                <a href="/input-admin" class="mt-2 inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">Tambah Admin</a>
+            </div>
+            <form method="get" action="/admin" class="flex items-center">
+                <input id="search" name="search" class="border p-2 rounded-l text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" placeholder="Cari admin...">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700 transition">Cari</button>
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-gray-700 border-collapse">
                 <thead>
-                    <tr class="font-bold border-b-2 p-2">
-                        <td class="p-2">No</td>
-                        <td class="p-2">Nama Admin</td>
-                        <td class="p-2">Email</td>
-                        <td class="p-2">Role</td>
-                        <td class="p-2">Aksi</td>
+                    <tr class="bg-gray-100 border-b">
+                        <th class="p-3 text-left">No</th>
+                        <th class="p-3 text-left">Nama Admin</th>
+                        <th class="p-3 text-left">Email</th>
+                        <th class="p-3 text-left">Role</th>
+                        <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $noAdmin = 1;
-                    @endphp
-                    @foreach ($admins as $admin)
-                        <tr class="border-b p-2">
-                        <td class="p-2">{{$noAdmin}}</td>
-                        <td class="p-2">{{$admin->name}}</td>
-                        <td class="p-2">{{$admin->email}}</td>
-                        <td class="p-2">{{$admin->role}}</td>
-                        <td class="p-2 flex gap-2">
-                            <button data-id="{{$admin->id}}" class="btn-delete-admin bg-red-500 py-1 px-4 rounded text-white">
-                                <i class="ri-delete-bin-line"></i>
-                            </button>
-                            <a href="/ubah-admin/{{$admin->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
-                                <i class="ri-edit-box-line"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @php
-                        $noAdmin++;
-                    @endphp
+                    @foreach ($admins as $index => $admin)
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">{{ $index + 1 }}</td>
+                            <td class="p-3">{{ $admin->name }}</td>
+                            <td class="p-3">{{ $admin->email }}</td>
+                            <td class="p-3">{{ $admin->role }}</td>
+                            <td class="p-3 flex justify-center gap-2">
+                                <a href="/ubah-admin/{{$admin->id}}" class="bg-yellow-400 px-3 py-1 rounded text-white hover:bg-yellow-500 transition">
+                                    <i class="ri-edit-box-line"></i>
+                                </a>
+                                <button data-id="{{$admin->id}}" class="btn-delete-admin bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 transition">
+                                    <i class="ri-delete-bin-line"></i>
+                                </button>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
-            <div class="mt-5">
-                {{$admins->links('pagination::tailwind')}}
+        </div>
+
+        <div class="mt-5 flex justify-between items-center">
+
+            <div>
+                {{ $admins->links('pagination::tailwind') }}
             </div>
         </div>
     </div>
+</div>
+
 @endsection

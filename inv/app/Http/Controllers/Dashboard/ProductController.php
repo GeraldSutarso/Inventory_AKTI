@@ -177,4 +177,22 @@ class ProductController extends Controller
     }
     
 
+    public function downloadQR($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if (!$product->qr_code) {
+            return redirect()->back()->with('error', 'QR Code tidak ditemukan.');
+        }
+
+        $filePath = storage_path('app/public/' . $product->qr_code);
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File QR Code tidak ditemukan.');
+        }
+
+        return response()->download($filePath, 'QR_' . $product->name . '.png');
+    }
+    
+
 }
