@@ -51,9 +51,10 @@
                         </td>
                         <td class="p-2 border text-center">
                             @if ($product->qr_code)
+                                <!-- Remove "public/" from the asset path -->
                                 <img src="{{ asset('storage/' . $product->qr_code) }}" class="w-16 h-16 rounded">
                             @else
-                                <a href="{{ route('products.qr', $product->id) }}" class="bg-blue-500 py-1 px-4 rounded text-white text-sm">
+                                <a href="{{ route('products.qr', $product->id) }}" class="...">
                                     Generate QR
                                 </a>
                             @endif
