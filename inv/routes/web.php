@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-qr/{id}', [ProductController::class, 'generateQr'])->name('products.qr');
     Route::get('/hasil/{id}', [ProductController::class, 'showHasil'])->name('hasil.show');
     Route::get('/download-qr/{id}', [ProductController::class, 'downloadQR'])->name('products.qr.download');
+    Route::put('/product/{id}/update-stock', [ProductController::class, 'updateStock'])->name('updateStock');
 
 
     Route::get('/supplier', [SupplierController::class,'index']);

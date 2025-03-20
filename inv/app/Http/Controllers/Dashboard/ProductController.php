@@ -195,6 +195,34 @@ class ProductController extends Controller
 
         return response()->download($filePath, 'QR_' . $product->name . '.png');
     }
+
+    public function updateStock(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $actionType = $request->input('action_type');
+        $jumlah = $request->input($actionType === 'tambah' ? 'barang_masuk' : 'barang_keluar', 0);
+    
+        if ($jumlah <= 0) {
+            return back()->with('error', 'Jumlah harus lebih dari 0!');
+        }
+    
+        if ($actionType === 'kurang' && $jumlah > $product->stock) {
+            return back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
+        }
+    
+        // Update stok sesuai tindakan yang dipilih
+        if ($actionType === 'tambah') {
+            $product->stock += $jumlah;
+        } else {
+            $product->stock -= $jumlah;
+        }
+    
+        $product->save();
+    
+        return back()->with('success', 'Stok berhasil diperbarui!');
+    }
+
+
     
 
 }

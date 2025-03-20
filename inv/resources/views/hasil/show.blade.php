@@ -4,7 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Produk</title>
-    <script src="https://cdn.tailwindcss.com"></script> <!-- Tambahkan Tailwind jika diperlukan -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function showForm(action) {
+            document.getElementById('formContainer').style.display = 'block';
+            
+            if (action === 'tambah') {
+                document.getElementById('labelInput').innerText = 'Jumlah Barang Masuk:';
+                document.getElementById('inputField').setAttribute('name', 'barang_masuk');
+                document.getElementById('inputField').setAttribute('placeholder', 'Masukkan jumlah barang masuk');
+                document.getElementById('inputField').setAttribute('min', '1');
+                document.getElementById('inputField').value = '';
+                document.getElementById('actionType').value = 'tambah';
+            } else {
+                document.getElementById('labelInput').innerText = 'Jumlah Barang Keluar:';
+                document.getElementById('inputField').setAttribute('name', 'barang_keluar');
+                document.getElementById('inputField').setAttribute('placeholder', 'Masukkan jumlah barang keluar');
+                document.getElementById('inputField').setAttribute('min', '1');
+                document.getElementById('inputField').value = '';
+                document.getElementById('actionType').value = 'kurang';
+            }
+        }
+    </script>
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 mt-5">
@@ -17,8 +38,29 @@
                 <div>
                     <h3 class="text-xl font-semibold">Barang: {{ $product->name }}</h3>
                     <p class="text-gray-600 mt-2">Kategori: <span class="font-bold">{{ $product->category->name }}</span></p>
-                    <p class="text-gray-600 mt-2">Jumlah Stok: <span class="font-bold">{{ $product->stock }}</span></p>
-                    <a href="/" class="mt-5 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">Kembali</a>
+                    <p class="text-gray-600 mt-2">Jumlah Stok: <span class="font-bold" id="currentStock">{{ $product->stock }}</span></p>
+
+                    <!-- Pilihan Tambah atau Kurangi Stok -->
+                    <div class="mt-4">
+                        <button onclick="showForm('tambah')" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700">Tambah Stok</button>
+                        <button onclick="showForm('kurang')" class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 ml-2">Kurangi Stok</button>
+                    </div>
+
+                    <!-- Form Input Barang Masuk/Keluar (Hidden by Default) -->
+                    <div id="formContainer" class="mt-4 hidden">
+                        <form action="{{ route('updateStock', $product->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" id="actionType" name="action_type" value="">
+
+                            <label id="labelInput" class="block text-gray-700"></label>
+                            <input type="number" id="inputField" class="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-full">Simpan Perubahan</button>
+                        </form>
+                    </div>
+
+                    <a href="/" class="mt-5 inline-block bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700">Kembali</a>
                 </div>
             </div>
         </div>
