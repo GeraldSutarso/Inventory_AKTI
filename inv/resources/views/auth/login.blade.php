@@ -45,11 +45,6 @@
                 <button class="bg-blue-600 hover:bg-blue-700 text-white text-center w-full mt-5 rounded-lg py-2 text-sm font-semibold shadow-md transition-all">
                     Log in
                 </button>
-                
-                <p class="text-center text-xs text-gray-500 mt-5">
-                    Don't have an account?
-                    <a href="#" class="text-blue-500 font-semibold hover:underline">Sign Up</a>
-                </p>
             </form>
         </div>
     </div>
