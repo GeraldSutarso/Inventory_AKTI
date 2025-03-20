@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products',[ProductController::class,'getAllProducts']);
     Route::get('/excel/products',[ProductController::class,'exportExcel']);
     Route::get('/generate-qr/{id}', [ProductController::class, 'generateQr'])->name('products.qr');
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/hasil/{id}', [ProductController::class, 'showHasil'])->name('hasil.show');
     Route::get('/download-qr/{id}', [ProductController::class, 'downloadQR'])->name('products.qr.download');
 
 

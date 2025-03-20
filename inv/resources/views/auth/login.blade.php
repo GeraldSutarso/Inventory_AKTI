@@ -38,9 +38,6 @@
                     <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                 @enderror
                 
-                <div class="flex justify-between items-center mt-3">
-                    <a href="#" class="text-xs text-blue-500 hover:underline">Forgot password?</a>
-                </div>
                 
                 <button class="bg-blue-600 hover:bg-blue-700 text-white text-center w-full mt-5 rounded-lg py-2 text-sm font-semibold shadow-md transition-all">
                     Log in

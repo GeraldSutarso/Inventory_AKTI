@@ -158,8 +158,9 @@ class ProductController extends Controller
 
         // Generate and save QR code
         $qrCode = QrCode::format('png')
-            ->size(200)
-            ->generate(route('products.show', $product->id));
+        ->size(200)
+        ->generate(route('hasil.show', $product->id));
+    
 
         Storage::disk('public')->put($qrCodePath, $qrCode);
 
@@ -170,11 +171,12 @@ class ProductController extends Controller
         return back()->with('message', 'QR Code berhasil dibuat!');
     }
 
-    public function show($id)
+    public function showHasil($id)
     {
         $product = Product::findOrFail($id);
-        return view('products.show', compact('product'));
+        return view('hasil.show', compact('product'));
     }
+    
     
 
     public function downloadQR($id)
