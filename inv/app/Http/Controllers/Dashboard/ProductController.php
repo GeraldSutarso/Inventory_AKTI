@@ -10,7 +10,8 @@ use App\Exports\ProductExport;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Support\Facades\Process;
+use App\Models\ProductSupplies;
+use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProductController extends Controller
@@ -198,27 +199,39 @@ class ProductController extends Controller
 
     public function updateStock(Request $request, $id)
     {
+        // Validate input
+        $request->validate([
+            'action_type' => 'required|in:tambah,kurang',
+            'stock_value' => 'required|integer|min:1',
+        ]);
+
         $product = Product::findOrFail($id);
         $actionType = $request->input('action_type');
-        $jumlah = $request->input($actionType === 'tambah' ? 'barang_masuk' : 'barang_keluar', 0);
-    
-        if ($jumlah <= 0) {
-            return back()->with('error', 'Jumlah harus lebih dari 0!');
-        }
-    
-        if ($actionType === 'kurang' && $jumlah > $product->stock) {
+        $quantity = $request->input('stock_value');
+
+        // Prevent negative stock
+        if ($actionType === 'kurang' && $quantity > $product->stock) {
             return back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
         }
-    
-        // Update stok sesuai tindakan yang dipilih
+
+        // Update stock
         if ($actionType === 'tambah') {
-            $product->stock += $jumlah;
+            $product->stock += $quantity;
         } else {
-            $product->stock -= $jumlah;
+            $product->stock -= $quantity;
         }
-    
+
         $product->save();
-    
+
+        // Save to ProductSupplies (record stock changes)
+        ProductSupplies::create([
+            'product_id' => $product->id,
+            'user_id' => Auth::id(),
+            'quantity' => $quantity,
+            'type' => $actionType,
+            'date' => now(),
+        ]);
+
         return back()->with('success', 'Stok berhasil diperbarui!');
     }
 

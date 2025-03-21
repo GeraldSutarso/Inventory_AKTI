@@ -12,22 +12,18 @@ class ProductSupplies extends Model
     protected $fillable = [
         'product_id',
         'user_id',
-        'supplier_id',
-        'date',
         'quantity',
-        'type'
+        'type',
+        'date',
     ];
 
-    public function supplier () {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    public function user () {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function product () {
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
-
 }
