@@ -19,7 +19,9 @@
             </div>
             <form method="get" action="/barang" class="flex w-full md:w-auto mt-3 md:mt-0">
                 <input id="search" name="search" class="border border-gray-300 p-3 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64" type="text" placeholder="Cari barang...">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-r-lg text-white text-sm">🔍</button>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-r-lg text-white text-sm">
+                    <i class="ri-search-line text-lg"></i>
+                </button>
             </form>
         </div>
 
@@ -30,7 +32,7 @@
                         <th class="p-4 border">No</th>
                         <th class="p-4 border">Nama Barang</th>
                         <th class="p-4 border">Harga</th>
-                        <th class="p-4 border">Jumlah</th>
+                        <th class="p-4 border">Stok</th>
                         <th class="p-4 border">Lokasi</th>
                         <th class="p-4 border">Gambar</th>
                         <th class="p-4 border">QR Code</th>

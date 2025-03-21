@@ -20,7 +20,9 @@
             </div>
             <form method="get" action="/kategori" class="flex items-center border rounded-lg overflow-hidden">
                 <input id="search" name="search" class="px-4 py-2 text-gray-600 focus:outline-none" type="text" placeholder="Cari...">
-                <button type="submit" class="bg-gray-700 text-white px-4 py-2 hover:bg-gray-800 transition">Cari</button>
+                <button type="submit" class="bg-gray-700 text-white px-4 py-2 hover:bg-gray-800 transition">
+                    <i class="ri-search-line text-lg"></i>
+                </button>
             </form>
         </div>
 

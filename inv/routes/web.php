@@ -69,19 +69,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin']);
     Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin']);
 
-    Route::get('/barang-masuk', [ProductSuppliesController::class, 'indexIncome']);
-    Route::get('/input-barang-masuk', [ProductSuppliesController::class, 'createIncome']);
-    Route::get('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'editIncome']);
-    Route::post('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'updateIncome']);
-    Route::post('/input-barang-masuk', [ProductSuppliesController::class, 'storeIncome']);
-    Route::delete('/hapus-barang-masuk/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
+    Route::resource('supplies', ProductSuppliesController::class)
+    ->except(['show'])
+    ->parameters(['supplies' => 'supply']);
 
-    Route::get('/barang-keluar', [ProductSuppliesController::class, 'indexOutcome']);
-    Route::get('/input-barang-keluar', [ProductSuppliesController::class, 'createOutcome']);
-    Route::post('/input-barang-keluar', [ProductSuppliesController::class, 'storeOutcome']);
-    Route::delete('/hapus-barang-keluar/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
-    Route::get('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'editOutcome']);
-    Route::post('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome']);
+    // Route::get('/barang-masuk', [ProductSuppliesController::class, 'indexIncome']);
+    // Route::get('/input-barang-masuk', [ProductSuppliesController::class, 'createIncome']);
+    // Route::get('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'editIncome']);
+    // Route::post('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'updateIncome']);
+    // Route::post('/input-barang-masuk', [ProductSuppliesController::class, 'storeIncome']);
+    // Route::delete('/hapus-barang-masuk/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
+
+    // Route::get('/barang-keluar', [ProductSuppliesController::class, 'indexOutcome']);
+    // Route::get('/input-barang-keluar', [ProductSuppliesController::class, 'createOutcome']);
+    // Route::post('/input-barang-keluar', [ProductSuppliesController::class, 'storeOutcome']);
+    // Route::delete('/hapus-barang-keluar/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
+    // Route::get('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'editOutcome']);
+    // Route::post('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome']);
 
     Route::get('/logout',[AuthController::class, 'logout']);
 });

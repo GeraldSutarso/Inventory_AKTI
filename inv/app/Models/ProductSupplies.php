@@ -17,6 +17,11 @@ class ProductSupplies extends Model
         'date',
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);

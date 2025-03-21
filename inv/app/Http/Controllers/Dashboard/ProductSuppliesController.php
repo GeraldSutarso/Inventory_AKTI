@@ -10,160 +10,122 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductSuppliesController extends Controller
 {
-    public function indexIncome () {
-        $productsIncome = ProductSupplies::with(['product', 'user'])->where('type', '=','income')->paginate(10);
-        return view('dashboard.income.index', ['productsIncome'=>$productsIncome]);
-    }
-
-    public function indexOutcome () {
-        $productsOutcome = ProductSupplies::with(['product', 'user'])->where('type','outcome')->paginate(10);
-        return view('dashboard.outcome.index', ['productsOutcome'=>$productsOutcome]);
-    }
-
-    public function createIncome(){
-        $products = Product::all();
-        return view('dashboard.income.input', compact('products'));
-    }
-    
-    public function createOutcome(){
-        $products = Product::all();
-        return view('dashboard.outcome.input', compact('products'));
-    }
-    
-
-    public function storeIncome(Request $request) {
-        $this->validate($request, [
-            'date'=> ['required'],
-            'quantity'=>['required'],
-            'product_id'=>['required'],
-        ]);
-
-       $created = ProductSupplies::create([
-            'product_id'=>$request->product_id,
-            'user_id'=>Auth::user()->id,
-            'date'=>$request->date,
-            'quantity'=>$request->quantity,
-            'type'=>'income'
+    public function index()
+    {
+        $activities = ProductSupplies::with(['product', 'user'])
+            ->latest()
+            ->paginate(10);
             
-       ]);
-
-       $sumIncomeQuantity = ProductSupplies::where('type', 'income')->where('product_id', $request->product_id)->sum('quantity');
-       $sumOutcomeQuantity = ProductSupplies::where('type', 'outcome')->where('product_id', $request->product_id)->sum('quantity');
-       $product = Product::findOrFail($request->product_id);
-       $quantityUpdated = $product->update([
-        'stock'=>($sumIncomeQuantity - $sumOutcomeQuantity)
-       ]);
-
-       if($created && $quantityUpdated){
-        return redirect('/barang-masuk')->with('message', 'data berhasil ditambahkan');
-       }
+        return view('dashboard.supplies.index', compact('activities'));
     }
 
-    public function storeOutcome(Request $request) {
-        $this->validate($request, [
-            'date'=> ['required'],
-            'quantity'=>['required'],
-            'product_id'=>['required'],
+    public function create()
+    {
+        $products = Product::all();
+        return view('dashboard.supplies.form', compact('products'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'type' => 'required|in:tambah,kurang',
+            'date' => 'required|date'
         ]);
 
-       $created = ProductSupplies::create([
-            'product_id'=>$request->product_id,
-            'user_id'=>Auth::user()->id,
-            'date'=>$request->date,
-            'quantity'=>$request->quantity,
-            'type'=>'outcome'
+        ProductSupplies::create([
+            'product_id' => $validated['product_id'],
+            'user_id' => Auth::id(),
+            'quantity' => $validated['quantity'],
+            'type' => $validated['type'],
+            'date' => $validated['date']
+        ]);
+
+        $this->updateProductStock($validated['product_id']);
+
+        return redirect()->route('supplies.index')
+            ->with('success', 'Aktivitas berhasil dicatat');
+    }
+
+    public function update(Request $request, ProductSupplies $supply)
+    {
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'type' => 'required|in:tambah,kurang',
+            'date' => 'required|date'
+        ]);
+
+        $originalProductId = $supply->product_id;
+        
+        $supply->update([
+            'product_id' => $validated['product_id'],
+            'quantity' => $validated['quantity'],
+            'type' => $validated['type'],
+            'date' => $validated['date']
+        ]);
+        
+        $this->updateProductStock($originalProductId);
+        if ($originalProductId != $validated['product_id']) {
+            $this->updateProductStock($validated['product_id']);
+        }
+
+        return redirect()->route('supplies.index')
+            ->with('success', 'Aktivitas berhasil diperbarui');
+    }
+
+    public function edit(ProductSupplies $supply)
+    {
+        $products = Product::all();
+        return view('dashboard.supplies.form', compact('supply', 'products'));
+    }
+
+    // public function update(Request $request, ProductSupplies $supply)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|exists:products,id',
+    //         'quantity' => 'required|integer|min:1',
+    //         'type' => 'required|in:tambah,kurang',
+    //         'date' => 'required|date'
+    //     ]);
+
+    //     $originalProductId = $supply->product_id;
+        
+    //     $supply->update($request->only(['product_id', 'quantity', 'type', 'date']));
+        
+    //     // Update both old and new product stocks
+    //     $this->updateProductStock($originalProductId);
+    //     if ($originalProductId != $request->product_id) {
+    //         $this->updateProductStock($request->product_id);
+    //     }
+
+    //     return redirect()->route('supplies.index')
+    //         ->with('success', 'Aktivitas berhasil diperbarui');
+    // }
+
+    public function destroy(ProductSupplies $supply)
+    {
+        $productId = $supply->product_id;
+        $supply->delete();
+        
+        $this->updateProductStock($productId);
+
+        return response()->json(['message' => 'Aktivitas berhasil dihapus']);
+    }
+
+    private function updateProductStock($productId)
+    {
+        $sumtambah = ProductSupplies::where('product_id', $productId)
+            ->where('type', 'tambah')
+            ->sum('quantity');
             
-       ]);
+        $sumkurang = ProductSupplies::where('product_id', $productId)
+            ->where('type', 'kurang')
+            ->sum('quantity');
 
-      $sumIncomeQuantity = ProductSupplies::where('type', 'income')->where('product_id', $request->product_id)->sum('quantity');
-       $sumOutcomeQuantity = ProductSupplies::where('type', 'outcome')->where('product_id', $request->product_id)->sum('quantity');
-       $product = Product::findOrFail($request->product_id);
-       $quantityUpdated = $product->update([
-        'stock'=>($sumIncomeQuantity - $sumOutcomeQuantity)
-       ]);
-
-       if($created && $quantityUpdated){
-        return redirect('/barang-keluar')->with('message', 'data berhasil ditambahkan');
-       }
-    }
-
-    public function deleteProductSupply($id) {
-        $productSupply = ProductSupplies::findOrFail($id);
-        $product = Product::findOrFail($productSupply->product_id);
-
-        $deleted = $productSupply->delete();
-        $sumIncomeQuantity = ProductSupplies::where('type', 'income')->sum('quantity');
-        $sumOutcomeQuantity = ProductSupplies::where('type', 'outcome')->sum('quantity');
-        $updated = $product->update([
-            'stock'=>($sumIncomeQuantity - $sumOutcomeQuantity)
+        Product::find($productId)->update([
+            'stock' => $sumtambah - $sumkurang
         ]);
-        if($deleted && $updated){
-            session()->flash('message', 'berhasil hapus data');
-            return response()->json(['message'=> 'success delete data'],200);
-        }
-    }
-
-    public function editIncome ($id) {
-        $productIncome = ProductSupplies::findOrFail($id);
-        $products = Product::all(); // Ambil semua produk
-    
-        return view('dashboard.income.update', [
-            'productIncome' => $productIncome,
-            'products' => $products // Kirim ke view
-        ]);
-    }
-    
-    public function editOutCome ($id) {
-        $productOutcome = ProductSupplies::findOrFail($id);
-        $products = Product::all(); // Ambil semua produk
-    
-        return view('dashboard.outcome.update', [
-            'productOutcome' => $productOutcome,
-            'products' => $products // Kirim ke view
-        ]);
-    }
-
-    public function updateIncome(Request $request, $id) {
-        $productIncome = ProductSupplies::findOrFail($id);
-        $product = Product::findOrFail($productIncome->product_id);
-
-        $updated = $productIncome->update([
-            'product_id'=>$request->product_id,
-            'user_id'=>Auth::user()->id,
-            'date'=>$request->date,
-            'quantity'=>$request->quantity,
-        ]);
-
-        $sumIncomeQuantity = ProductSupplies::where('type', 'income')->sum('quantity');
-        $sumOutcomeQuantity = ProductSupplies::where('type', 'outcome')->sum('quantity');
-        $product->update([
-            'stock'=>($sumIncomeQuantity - $sumOutcomeQuantity)
-        ]);
-
-        if($updated){
-            return redirect('/barang-masuk')->with('message', 'data berhasil diubah');
-        }
-    }
-
-    public function updateOutcome(Request $request, $id) {
-        $productOutcome = ProductSupplies::findOrFail($id);
-        $product = Product::findOrFail($productOutcome->product_id);
-
-        $updated = $productOutcome->update([
-            'product_id'=>$request->product_id,
-            'user_id'=>Auth::user()->id,
-            'date'=>$request->date,
-            'quantity'=>$request->quantity,
-        ]);
-
-        $sumIncomeQuantity = ProductSupplies::where('type', 'income')->sum('quantity');
-        $sumOutcomeQuantity = ProductSupplies::where('type', 'outcome')->sum('quantity');
-        $product->update([
-            'stock'=>($sumIncomeQuantity - $sumOutcomeQuantity)
-        ]);
-
-        if($updated){
-            return redirect('/barang-keluar')->with('message', 'data berhasil diubah');
-        }
     }
 }
