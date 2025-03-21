@@ -12,9 +12,9 @@
     <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="flex flex-wrap justify-between items-center mb-4">
             <div>
-                <h2 class="text-xl font-bold text-gray-700">Data Kategori</h2>
+                <h2 class="text-xl font-bold text-gray-700">Data Lokasi</h2>
                 <div class="mt-2 flex gap-2">
-                    <a href="/input-kategori" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Tambah Kategori</a>
+                    <a href="/input-kategori" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Tambah Lokasi</a>
                     <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Export Excel</a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <thead>
                     <tr class="bg-gray-100 text-left font-semibold">
                         <th class="p-3">No</th>
-                        <th class="p-3">Nama Kategori</th>
+                        <th class="p-3">Nama Lokasi</th>
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>

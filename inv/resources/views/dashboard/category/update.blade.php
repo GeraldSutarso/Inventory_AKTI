@@ -4,14 +4,14 @@
 <div class="container mx-auto px-4">
     <div class="bg-white p-6 mt-5 rounded-lg shadow-md">
         <div class="flex justify-between items-center border-b pb-4 mb-4">
-            <h2 class="text-gray-700 font-bold text-lg">Ubah Data Kategori</h2>
+            <h2 class="text-gray-700 font-bold text-lg">Ubah Data Lokasi</h2>
             <a href="/kategori" class="bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm">Back</a>
         </div>
 
         <form action="/ubah-kategori/{{$category->id}}" method="POST" class="w-full md:w-1/2 mx-auto">
             @csrf
             <div class="mt-3">
-                <label class="block text-sm font-medium text-gray-700" for="name">Nama Kategori</label>
+                <label class="block text-sm font-medium text-gray-700" for="name">Nama Lokasi</label>
                 <div class="border-2 rounded-md p-2 @error('name') border-red-400 @enderror">
                     <input name="name" value="{{$category->name}}" class="w-full h-full focus:outline-none text-sm" id="name" type="text">
                 </div>

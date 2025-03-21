@@ -37,7 +37,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-600" for="category">Kategori Barang</label>
+                <label class="block text-sm font-medium text-gray-600" for="category">Lokasi Barang</label>
                 <select name="category_id" class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-gray-300 focus:outline-none">
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>

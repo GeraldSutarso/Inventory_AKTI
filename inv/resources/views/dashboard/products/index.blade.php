@@ -31,7 +31,7 @@
                         <th class="p-4 border">Nama Barang</th>
                         <th class="p-4 border">Harga</th>
                         <th class="p-4 border">Jumlah</th>
-                        <th class="p-4 border">Kategori</th>
+                        <th class="p-4 border">Lokasi</th>
                         <th class="p-4 border">Gambar</th>
                         <th class="p-4 border">QR Code</th>
                         <th class="p-4 border">Aksi</th>

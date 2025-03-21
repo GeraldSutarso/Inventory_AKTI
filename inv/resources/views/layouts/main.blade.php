@@ -29,7 +29,7 @@
         <ul class="mt-6 space-y-3">
             <li><a href="/" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-dashboard-line mr-3 text-lg"></i>Overview</a></li>
             <li><a href="/barang" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-archive-2-line mr-3 text-lg"></i>Data Barang</a></li>
-            <li><a href="/kategori" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-book-line mr-3 text-lg"></i>Data Kategori</a></li>
+            <li><a href="/kategori" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-book-line mr-3 text-lg"></i>Data Lokasi</a></li>
             <li><a href="/barang-masuk" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-add-box-line mr-3 text-lg"></i>Barang Masuk</a></li>
             <li><a href="/barang-keluar" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md transition"><i class="ri-folder-reduce-line mr-3 text-lg"></i>Barang Keluar</a></li>
             @if(Auth::user()->role === 'admin')
