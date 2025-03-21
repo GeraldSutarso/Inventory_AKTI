@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <h3 class="text-xl font-semibold">Barang: {{ $product->name }}</h3>
-                    <p class="text-gray-600 mt-2">Kategori: <span class="font-bold">{{ $product->category->name }}</span></p>
+                    <p class="text-gray-600 mt-2">Lokasi: <span class="font-bold">{{ $product->category->name }}</span></p>
                     <p class="text-gray-600 mt-2">Jumlah Stok: <span class="font-bold" id="currentStock">{{ $product->stock }}</span></p>
 
                     <!-- Pilihan Tambah atau Kurangi Stok -->
