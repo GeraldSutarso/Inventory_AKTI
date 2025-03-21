@@ -18,6 +18,10 @@ return [
         'passwords' => 'users',
     ],
 
+    'session' => [
+    'expire_on_close' => false,  // Ensure session persists even if browser is closed
+    'lifetime' => 525600,  // Keep users logged in for 1 year
+    ],
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards

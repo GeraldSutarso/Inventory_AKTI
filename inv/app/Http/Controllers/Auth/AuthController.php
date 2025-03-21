@@ -15,20 +15,22 @@ class AuthController extends Controller
     }
 
     public function login (Request $request) {
-
         $this->validate($request, [
             'email' => ['required'],
-            'password'=>['required']
+            'password' => ['required']
         ]);
-
+    
         $user = User::where('email', $request->email)->first();
-        if(!$user || !Hash::check($request->password, $user->password)){
+    
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return redirect('/login')->with('error', 'Email or Password is not valid !!');
-        } else {
-            Auth::login($user, false);
-            return redirect('/');
-        }
+        } 
+    
+        Auth::login($user, true);
+    
+        return redirect('/');
     }
+    
 
     public function logout (Request $request) {
         Auth::logout();

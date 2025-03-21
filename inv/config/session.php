@@ -31,9 +31,9 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
-
-    'expire_on_close' => false,
+    'driver' => 'cookie', // Store session in cookies for automatic login
+    'lifetime' => 525600, // 3 months (in minutes)
+    'expire_on_close' => false, // Keep session even after closing browser
 
     /*
     |--------------------------------------------------------------------------

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/base.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    
+    <link rel="icon" type="image/png" href="{{ asset('img/Favicon akti.png') }}">
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -23,7 +23,7 @@
     <!-- Sidebar -->
     <div class="w-64 bg-gray-900 h-screen p-5 fixed top-0 left-0 shadow-lg">
         <a href="#" class="flex items-center pb-4 border-b border-gray-800">
-            <img src="/img/Favicon akti.png" alt="logo" class="w-10 h-10 rounded-full mr-3 object-cover" />
+            <img src="/img/Favicon akti.png" alt="logo" class="w-10 h-10 mr-3 object-cover" />
             <span class="text-lg font-bold text-white">Inventory AKTI</span>
         </a>
         <ul class="mt-6 space-y-3">
