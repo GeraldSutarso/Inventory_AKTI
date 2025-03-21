@@ -12,14 +12,14 @@
             
             if (action === 'tambah') {
                 document.getElementById('labelInput').innerText = 'Jumlah Barang Masuk:';
-                document.getElementById('inputField').setAttribute('name', 'stock_value'); // FIXED
+                document.getElementById('inputField').setAttribute('name', 'stock_value'); 
                 document.getElementById('inputField').setAttribute('placeholder', 'Masukkan jumlah barang masuk');
                 document.getElementById('inputField').setAttribute('min', '1');
                 document.getElementById('inputField').value = '';
                 document.getElementById('actionType').value = 'tambah';
             } else {
                 document.getElementById('labelInput').innerText = 'Jumlah Barang Keluar:';
-                document.getElementById('inputField').setAttribute('name', 'stock_value'); // FIXED
+                document.getElementById('inputField').setAttribute('name', 'stock_value'); 
                 document.getElementById('inputField').setAttribute('placeholder', 'Masukkan jumlah barang keluar');
                 document.getElementById('inputField').setAttribute('min', '1');
                 document.getElementById('inputField').value = '';
@@ -33,8 +33,8 @@
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Detail Produk</h2>
             <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-64 object-cover rounded-lg shadow-md">
+                <div class="flex justify-center">
+                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-64 object-contain rounded-lg shadow-md">
                 </div>
                 <div>
                     <h3 class="text-xl font-semibold">Barang: {{ $product->name }}</h3>

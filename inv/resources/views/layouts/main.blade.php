@@ -222,8 +222,12 @@
         <h2 class="text-lg font-semibold text-gray-700">Dashboard Inventory</h2>
         <div class="flex items-center">
             <p class="text-sm text-gray-600 mr-2">{{ Auth::user()->name }}</p>
-            <img src="https://placehold.co/40x40" alt="User" class="w-10 h-10 rounded-full border border-gray-300" />
-        </div>
+            <img 
+                src="{{ Auth::user()->role == 'admin' ? 'https://static.vecteezy.com/system/resources/previews/020/429/953/original/admin-icon-vector.jpg' : 'https://th.bing.com/th/id/OIP.KEwFWztwZ37-ZKTMcxuZuAHaHa?w=512&h=512&rs=1&pid=ImgDetMain' }}" 
+                alt="User" 
+                class="w-10 h-10 rounded-full border border-gray-300"
+            />
+        </div>        
     </div>
 
     <!-- Overlay -->
