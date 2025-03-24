@@ -11,8 +11,8 @@ class OverviewController extends Controller
 {
     public function index () {
         $countProducts = Product::count();
-        $countProductIncome = ProductSupplies::where('type', 'income')->count();
-        $countProductOutcome = ProductSupplies::where('type', 'outcome')->count();
+        $countProductIncome = ProductSupplies::where('type', 'tambah')->count();
+        $countProductOutcome = ProductSupplies::where('type', 'kurang')->count();
         return view('dashboard.overview.index',
          [
             'countProducts'=>$countProducts,

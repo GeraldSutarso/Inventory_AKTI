@@ -71,25 +71,24 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-gray-700 border border-gray-300 rounded-lg overflow-hidden shadow-md">
+            <table class="w-full text-sm text-gray-700 border border-gray-300 rounded-lg shadow-md">
                 <thead class="bg-gray-200 text-gray-700">
                     <tr>
-                        <th class="p-4 border">No</th>
-                        <th class="p-4 border">Nama Barang</th>
-                        <th class="p-4 border">Harga</th>
-                        <th class="p-4 border">Stok</th>
-                        <th class="p-4 border">Min Stok</th>
-                        <th class="p-4 border">Max Stok</th>
-                        <th class="p-4 border">Lokasi</th>
-                        <th class="p-4 border">Gambar</th>
-                        <th class="p-4 border">QR Code</th>
-                        <th class="p-4 border">Aksi</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">No</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-left">Nama Barang</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Harga</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Stok</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Min Stok</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Max Stok</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Lokasi</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Gambar</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">QR Code</th>
+                        <th class="p-2 md:p-3 border border-gray-300 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-300">
                     @foreach ($products as $index => $product)
                         @php
-                            // Determine row color based on stock status
                             $rowClass = '';
                             if ($product->stock <= 0) {
                                 $rowClass = 'bg-red-100';
@@ -102,31 +101,35 @@
                             }
                         @endphp
                         <tr class="{{ $rowClass }} hover:bg-opacity-80">
-                            <td class="p-4 text-center">{{ $index + 1 }}</td>
-                            <td class="p-4">{{ $product->name }}</td>
-                            <td class="p-4 text-green-600 font-semibold">Rp.{{ number_format($product->price, 0) }}</td>
-                            <td class="p-4 text-center font-bold">{{ $product->stock }}</td>
-                            <td class="p-4 text-center">{{ $product->stock_min }}</td>
-                            <td class="p-4 text-center">{{ $product->stock_max }}</td>
-                            <td class="p-4 text-center">{{ $product->category }}</td>
-                            <td class="p-4 text-center">
-                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 rounded-lg shadow-md">
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $index + 1 }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-left break-words">{{ $product->name }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center text-green-600 font-semibold">Rp.{{ number_format($product->price, 0) }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center font-bold">{{ $product->stock }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->stock_min }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->stock_max }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center break-words">{{ $product->category }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">
+                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" 
+                                    class="w-20 h-20 md:w-24 md:h-24 mx-auto object-cover rounded-lg shadow-md">
                             </td>
-                            <td class="p-4 text-center">
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">
                                 @if ($product->qr_code)
-                                    <img src="{{ asset('storage/' . $product->qr_code) }}" class="w-16 h-16 rounded-lg shadow-md">
+                                    <img src="{{ asset('storage/' . $product->qr_code) }}" 
+                                        alt="QR Code for {{ $product->name }}"
+                                        class="w-24 h-24 md:w-28 md:h-28 mx-auto object-contain rounded-lg shadow-md">
                                 @else
-                                    <a href="{{ route('products.qr', $product->id) }}" class="text-blue-600 hover:text-blue-800 text-sm">Generate QR</a>
+                                    <a href="{{ route('products.qr', $product->id) }}" 
+                                        class="text-blue-600 hover:text-blue-800 text-sm">Generate QR</a>
                                 @endif
                             </td>
-                            <td class="p-4 text-center flex flex-col sm:flex-row gap-2 justify-center">
-                                <a href="{{ route('barang.edit', $product->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">✏ Edit</a>
-                                <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">🗑 Hapus</button>
-                                <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">⬇ Download QR</a>
-                                
-                                <!-- Stock Management Button -->
-                                <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
-                                    class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">📦 Update Stok</a>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">
+                                <div class="flex flex-wrap gap-1 md:gap-2 justify-center">
+                                    <a href="{{ route('barang.edit', $product->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">✏ Edit</a>
+                                    <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 hover:bg-red-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">🗑 Hapus</button>
+                                    <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">⬇ Download QR</a>
+                                    <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
+                                        class="bg-purple-500 hover:bg-purple-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">📦 Update Stok</a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

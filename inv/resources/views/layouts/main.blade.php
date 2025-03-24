@@ -397,7 +397,7 @@
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
 
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 100) {
+                if (window.pageYOffset > 10) {
                     scrollToTopBtn.style.display = 'flex';
                 } else {
                     scrollToTopBtn.style.display = 'none';
