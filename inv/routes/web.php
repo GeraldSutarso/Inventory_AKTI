@@ -22,19 +22,24 @@ use App\Http\Controllers\Dashboard\UserController;
 
 
 Route::middleware('auth')->group(function () {
+    
     Route::get('/', [OverviewController::class, 'index']);
-    Route::get('/barang', [ProductController::class, 'index']);
-    Route::get('/input-barang', [ProductController::class, 'create']);
-    Route::delete('/hapus-barang/{id}', [ProductController::class, 'delete']);
-    Route::post('/input-barang', [ProductController::class, 'store']);
-    Route::get('/ubah-barang/{id}', [ProductController::class, 'edit']);
-    Route::post('/ubah-barang/{id}', [ProductController::class, 'update']);
-    Route::get('/products',[ProductController::class,'getAllProducts']);
-    Route::get('/excel/products',[ProductController::class,'exportExcel']);
-    Route::get('/generate-qr/{id}', [ProductController::class, 'generateQr'])->name('products.qr');
-    Route::get('/hasil/{id}', [ProductController::class, 'showHasil'])->name('hasil.show');
-    Route::get('/download-qr/{id}', [ProductController::class, 'downloadQR'])->name('products.qr.download');
-    Route::put('/product/{id}/update-stock', [ProductController::class, 'updateStock'])->name('updateStock');
+    // Replace existing product routes with:
+    Route::prefix('barang')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('barang.index');
+        Route::get('/create', [ProductController::class, 'create'])->name('barang.create');
+        Route::post('/', [ProductController::class, 'store'])->name('barang.store');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('barang.edit');
+        Route::put('/{product}', [ProductController::class, 'update'])->name('barang.update');
+        Route::delete('/{product}', [ProductController::class, 'delete'])->name('barang.delete');
+    });
+
+    // Keep these additional routes
+    Route::get('/products', [ProductController::class, 'getAllProducts']);
+    Route::get('/excel/products', [ProductController::class, 'exportExcel']);
+    Route::get('/generate-qr/{product}', [ProductController::class, 'generateQR'])->name('products.qr');
+    Route::get('/hasil/{product}', [ProductController::class, 'showHasil'])->name('hasil.show');
+    Route::get('/download-qr/{product}', [ProductController::class, 'downloadQR'])->name('products.qr.download');
 
 
     Route::get('/supplier', [SupplierController::class,'index']);

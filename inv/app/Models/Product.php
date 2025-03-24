@@ -14,8 +14,11 @@ class Product extends Model
         'name',
         'category_id',
         'stock',
+        'stock_min',
+        'stock_max',
         'price',
-        'image'
+        'image',
+        'qr_code',
     ];
 
     public function category () {

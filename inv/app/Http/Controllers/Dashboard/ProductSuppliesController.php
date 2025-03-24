@@ -44,8 +44,8 @@ class ProductSuppliesController extends Controller
 
         $this->updateProductStock($validated['product_id']);
 
-        return redirect()->route('supplies.index')
-            ->with('success', 'Aktivitas berhasil dicatat');
+        return redirect($request->input('redirect_to', route('supplies.index')))
+            ->with('success', 'Aktivitas berhasil diperbarui');
     }
 
     public function update(Request $request, ProductSupplies $supply)
@@ -71,9 +71,10 @@ class ProductSuppliesController extends Controller
             $this->updateProductStock($validated['product_id']);
         }
 
-        return redirect()->route('supplies.index')
+        return redirect($request->input('redirect_to', route('supplies.index')))
             ->with('success', 'Aktivitas berhasil diperbarui');
     }
+
 
     public function edit(ProductSupplies $supply)
     {

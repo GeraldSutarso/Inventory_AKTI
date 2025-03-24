@@ -7,13 +7,37 @@
    </div>
 @endif
 
+@if (session('success'))
+   <div id="success-toast" class="fixed top-5 right-5 z-50 flex items-center max-w-xs p-4 text-sm text-white bg-green-500 rounded-lg shadow-lg animate-fade-in">
+       <span class="font-semibold">{{ session()->get('success') }}</span>
+   </div>
+@endif
+
+@if (session('warning'))
+   <div id="warning-toast" class="fixed top-5 right-5 z-50 flex items-center max-w-xs p-4 text-sm text-white bg-yellow-500 rounded-lg shadow-lg animate-fade-in">
+       <span class="font-semibold">{{ session()->get('warning') }}</span>
+   </div>
+@endif
+
+@if (session('danger'))
+   <div id="danger-toast" class="fixed top-5 right-5 z-50 flex items-center max-w-xs p-4 text-sm text-white bg-red-500 rounded-lg shadow-lg animate-fade-in">
+       <span class="font-semibold">{{ session()->get('danger') }}</span>
+   </div>
+@endif
+
+@if (session('error'))
+   <div id="error-toast" class="fixed top-5 right-5 z-50 flex items-center max-w-xs p-4 text-sm text-white bg-red-500 rounded-lg shadow-lg animate-fade-in">
+       <span class="font-semibold">{{ session()->get('error') }}</span>
+   </div>
+@endif
+
 <div class="container mx-auto px-6">
     <div class="bg-white mt-6 p-8 rounded-xl shadow-lg">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
             <div>
                 <h2 class="text-gray-900 font-bold text-3xl">Data Barang</h2>
                 <div class="mt-3 flex gap-4">
-                    <a href="/input-barang" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">+ Tambah Barang</a>
+                    <a href="{{ route('barang.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">+ Tambah Barang</a>
                     <a href="/excel/products" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">⬇ Export Excel</a>
                 </div>
             </div>
@@ -25,6 +49,27 @@
             </form>
         </div>
 
+        <div class="mb-4">
+            <div class="flex items-center justify-start space-x-4 text-sm">
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-green-100 border border-green-400 rounded mr-2"></div>
+                    <span>Stok Normal</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-yellow-100 border border-yellow-400 rounded mr-2"></div>
+                    <span>Stok Di Bawah Minimum</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-red-100 border border-red-400 rounded mr-2"></div>
+                    <span>Stok Habis</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-blue-100 border border-blue-400 rounded mr-2"></div>
+                    <span>Stok Melebihi Maksimum</span>
+                </div>
+            </div>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-gray-700 border border-gray-300 rounded-lg overflow-hidden shadow-md">
                 <thead class="bg-gray-200 text-gray-700">
@@ -33,6 +78,8 @@
                         <th class="p-4 border">Nama Barang</th>
                         <th class="p-4 border">Harga</th>
                         <th class="p-4 border">Stok</th>
+                        <th class="p-4 border">Min Stok</th>
+                        <th class="p-4 border">Max Stok</th>
                         <th class="p-4 border">Lokasi</th>
                         <th class="p-4 border">Gambar</th>
                         <th class="p-4 border">QR Code</th>
@@ -41,11 +88,26 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-300">
                     @foreach ($products as $index => $product)
-                        <tr class="hover:bg-gray-100">
+                        @php
+                            // Determine row color based on stock status
+                            $rowClass = '';
+                            if ($product->stock <= 0) {
+                                $rowClass = 'bg-red-100';
+                            } elseif ($product->stock < $product->stock_min) {
+                                $rowClass = 'bg-yellow-100';
+                            } elseif ($product->stock > $product->stock_max) {
+                                $rowClass = 'bg-blue-100';
+                            } else {
+                                $rowClass = 'bg-green-100';
+                            }
+                        @endphp
+                        <tr class="{{ $rowClass }} hover:bg-opacity-80">
                             <td class="p-4 text-center">{{ $index + 1 }}</td>
                             <td class="p-4">{{ $product->name }}</td>
                             <td class="p-4 text-green-600 font-semibold">Rp.{{ number_format($product->price, 0) }}</td>
-                            <td class="p-4 text-center">{{ $product->stock }}</td>
+                            <td class="p-4 text-center font-bold">{{ $product->stock }}</td>
+                            <td class="p-4 text-center">{{ $product->stock_min }}</td>
+                            <td class="p-4 text-center">{{ $product->stock_max }}</td>
                             <td class="p-4 text-center">{{ $product->category }}</td>
                             <td class="p-4 text-center">
                                 <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 rounded-lg shadow-md">
@@ -57,10 +119,14 @@
                                     <a href="{{ route('products.qr', $product->id) }}" class="text-blue-600 hover:text-blue-800 text-sm">Generate QR</a>
                                 @endif
                             </td>
-                            <td class="p-4 text-center flex gap-2 justify-center">
-                                <a href="/ubah-barang/{{ $product->id }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">✏ Edit</a>
+                            <td class="p-4 text-center flex flex-col sm:flex-row gap-2 justify-center">
+                                <a href="{{ route('barang.edit', $product->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">✏ Edit</a>
                                 <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">🗑 Hapus</button>
                                 <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">⬇ Download QR</a>
+                                
+                                <!-- Stock Management Button -->
+                                <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
+                                    class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-md text-sm shadow-md font-semibold">📦 Update Stok</a>
                             </td>
                         </tr>
                     @endforeach
@@ -72,4 +138,43 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+    // Toast notifications auto-hide
+    setTimeout(() => {
+        const toasts = document.querySelectorAll('#toast-container, #success-toast, #warning-toast, #danger-toast, #error-toast');
+        toasts.forEach(toast => {
+            if (toast) {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }
+        });
+    }, 3000);
+
+    // Delete product functionality
+    document.querySelectorAll('.btn-delete-product').forEach(button => {
+        button.addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin menghapus barang ini?')) {
+                const id = this.getAttribute('data-id');
+                fetch(`/barang/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'success delete data') {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+
+</script>
 @endsection

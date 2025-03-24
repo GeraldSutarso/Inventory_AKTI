@@ -7,10 +7,10 @@
             <h2 class="text-gray-700 font-bold text-xl">
                 {{ isset($supply) ? 'Ubah' : 'Tambah' }} Aktivitas Stok
             </h2>
-            <a href="{{ route('supplies.index') }}" 
-               class="flex items-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm shadow-md transition">
-                <i class="ri-arrow-left-line mr-2"></i> Kembali
-            </a>
+            <a href="{{ url()->previous() }}" 
+                class="flex items-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm shadow-md transition">
+                 <i class="ri-arrow-left-line mr-2"></i> Kembali
+            </a>             
         </div>
         
         <form action="{{ isset($supply) ? route('supplies.update', $supply) : route('supplies.store') }}" method="POST" class="w-full">
@@ -75,6 +75,8 @@
                     {{ isset($supply) ? 'Perbarui' : 'Simpan' }} Data
                 </button>
             </div>
+            <input type="hidden" name="redirect_to" value="{{ request('redirect_to', url()->previous()) }}">
+
         </form>
     </div>
 </div>
