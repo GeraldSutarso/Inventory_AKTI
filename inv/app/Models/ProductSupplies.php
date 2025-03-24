@@ -14,6 +14,7 @@ class ProductSupplies extends Model
         'user_id',
         'quantity',
         'type',
+        'stock',
         'date',
     ];
 

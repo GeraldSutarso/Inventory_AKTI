@@ -15,9 +15,11 @@ class ProductSuppliesController extends Controller
         $activities = ProductSupplies::with(['product', 'user'])
             ->latest()
             ->paginate(10);
-            
+    
         return view('dashboard.supplies.index', compact('activities'));
     }
+    
+
 
     public function create()
     {
@@ -34,12 +36,18 @@ class ProductSuppliesController extends Controller
             'date' => 'required|date'
         ]);
 
+        $product = Product::findOrFail($validated['product_id']);
+        $newStock = $validated['type'] === 'tambah' 
+            ? $product->stock + $validated['quantity'] 
+            : $product->stock - $validated['quantity'];
+
         ProductSupplies::create([
             'product_id' => $validated['product_id'],
             'user_id' => Auth::id(),
             'quantity' => $validated['quantity'],
             'type' => $validated['type'],
-            'date' => $validated['date']
+            'date' => $validated['date'],
+            'stock' => $newStock
         ]);
 
         $this->updateProductStock($validated['product_id']);
@@ -47,6 +55,7 @@ class ProductSuppliesController extends Controller
         return redirect($request->input('redirect_to', route('supplies.index')))
             ->with('success', 'Aktivitas berhasil diperbarui');
     }
+
 
     public function update(Request $request, ProductSupplies $supply)
     {
@@ -58,14 +67,20 @@ class ProductSuppliesController extends Controller
         ]);
 
         $originalProductId = $supply->product_id;
+        $product = Product::findOrFail($validated['product_id']);
         
+        $newStock = $validated['type'] === 'tambah' 
+            ? $product->stock + $validated['quantity'] 
+            : $product->stock - $validated['quantity'];
+
         $supply->update([
             'product_id' => $validated['product_id'],
             'quantity' => $validated['quantity'],
             'type' => $validated['type'],
-            'date' => $validated['date']
+            'date' => $validated['date'],
+            'stock' => $newStock
         ]);
-        
+
         $this->updateProductStock($originalProductId);
         if ($originalProductId != $validated['product_id']) {
             $this->updateProductStock($validated['product_id']);
@@ -74,6 +89,7 @@ class ProductSuppliesController extends Controller
         return redirect($request->input('redirect_to', route('supplies.index')))
             ->with('success', 'Aktivitas berhasil diperbarui');
     }
+
 
 
     public function edit(ProductSupplies $supply)
@@ -117,16 +133,14 @@ class ProductSuppliesController extends Controller
 
     private function updateProductStock($productId)
     {
-        $sumtambah = ProductSupplies::where('product_id', $productId)
-            ->where('type', 'tambah')
-            ->sum('quantity');
-            
-        $sumkurang = ProductSupplies::where('product_id', $productId)
-            ->where('type', 'kurang')
-            ->sum('quantity');
+        $latestStock = ProductSupplies::where('product_id', $productId)
+            ->orderBy('date', 'desc')
+            ->orderBy('id', 'desc') // Ensures most recent transaction is used
+            ->value('stock');
 
-        Product::find($productId)->update([
-            'stock' => $sumtambah - $sumkurang
+        Product::where('id', $productId)->update([
+            'stock' => $latestStock ?? 0 // If no supplies exist, set to 0
         ]);
     }
+
 }

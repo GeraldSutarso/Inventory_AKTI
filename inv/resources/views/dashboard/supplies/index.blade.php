@@ -52,6 +52,7 @@
                         <th class="p-3">Barang</th>
                         <th class="p-3">Lokasi</th>
                         <th class="p-3">Kuantitas</th>
+                        <th class="p-3">Riwayat Stock</th>
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -62,7 +63,6 @@
                         <td class="p-3" title="Tanggal">
                             {{ $activity->date->format('d M Y') }}
                         </td>
-                        
                         <td class="p-3 text-sm text-gray-500" title="Waktu sistem">
                             {{ $activity->created_at->format('d M Y H:i') }}
                             @if($activity->created_at != $activity->updated_at)
@@ -77,6 +77,28 @@
                                 {{ $activity->type === 'tambah' ? '+' : '-' }}{{ $activity->quantity }}
                             </span>
                         </td>
+                        <td class="p-3 font-semibold">
+                            @php
+                                $stock = (int) $activity->stock;
+                                $minStock = (int) $activity->product->stock_min;
+                                $maxStock = (int) $activity->product->stock_max;
+                                $color = 'text-gray-600';
+
+                                if ($stock <= 0) {
+                                    $color = 'text-red-500'; // Stock is 0 or below → Red
+                                } elseif ($stock < $minStock) {
+                                    $color = 'text-yellow-500'; // Stock is below min_stock → Yellow
+                                } elseif ($stock >= $minStock && $stock <= $maxStock) {
+                                    $color = 'text-green-500'; // Stock is within range → Green
+                                } elseif ($stock > $maxStock) {
+                                    $color = 'text-blue-500'; // Stock is above max_stock → Blue
+                                }
+                            @endphp
+
+                        
+                            <span class="{{ $color }}">{{ $stock }}</span>
+                        </td>
+                        
                         <td class="p-3 flex justify-center space-x-2">
                             <button data-id="{{ $activity->id }}" 
                                     class="delete-btn bg-red-500 hover:bg-red-600 py-1 px-4 rounded text-white transition shadow-md">
@@ -89,7 +111,7 @@
                         </td>
                     </tr>
                     @endforeach
-                </tbody>
+                </tbody>                
             </table>
         </div>
 
