@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\ProductSuppliesController;
 use App\Http\Controllers\Dashboard\SupplierController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\QRScannerController;
+use App\Http\Controllers\LabelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,3 +102,4 @@ Route::middleware('guest')->group(function() {
 });
 
 Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
+Route::get('/label', [LabelController::class, 'index'])->name('label.index');

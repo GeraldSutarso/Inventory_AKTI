@@ -47,17 +47,19 @@
     // Menyesuaikan ukuran scanner berdasarkan ukuran layar
     function getQrboxSize() {
         let width = window.innerWidth;
-        if (width < 600) {
-            return { width: 200, height: 200 }; // Ukuran lebih kecil untuk HP
-        } else {
-            return { width: 300, height: 300 }; // Ukuran lebih besar untuk tablet/PC
-        }
+        return width < 600 ? { width: 200, height: 200 } : { width: 300, height: 300 };
     }
 
-    let scanner = new Html5QrcodeScanner("qr-reader", {
-        fps: 10,
-        qrbox: getQrboxSize() // Ukuran responsif
-    });
+    function getCameraOptions() {
+        return {
+            fps: 10,
+            qrbox: getQrboxSize(),
+            aspectRatio: 1.0,
+            facingMode: "environment" // Kamera belakang untuk HP
+        };
+    }
+
+    let scanner = new Html5QrcodeScanner("qr-reader", getCameraOptions());
 
     scanner.render(onScanSuccess, onScanError);
 </script>

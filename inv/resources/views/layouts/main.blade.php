@@ -246,6 +246,7 @@
             <li><a href="/kategori"><i class="ri-book-line"></i>Data Lokasi</a></li>
             <li><a href="/supplies"><i class="ri-archive-line"></i>Riwayat Stok</a></li>
             <li><a href="/qr-scanner"><i class="ri-qr-code-line"></i>QR Scanner</a></li>
+            <li><a href="/label"><i class="ri-bookmark-fill"></i>Label</a></li>
             @if(Auth::user()->role === 'admin')
             <li><a href="/petugas"><i class="ri-user-line"></i>Data Petugas</a></li>
             <li><a href="/admin"><i class="ri-admin-line"></i>Data Admin</a></li>
