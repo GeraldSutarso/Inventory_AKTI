@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ProductSuppliesController;
 use App\Http\Controllers\Dashboard\SupplierController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\QRScannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,3 +101,5 @@ Route::middleware('guest')->group(function() {
     Route::get('/login', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
+
+Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
