@@ -13,7 +13,8 @@
     <link rel="icon" type="image/png" href="{{ asset('img/Favicon akti.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite('resources/css/app.css')
     <title>Dashboard Inventory</title>
     

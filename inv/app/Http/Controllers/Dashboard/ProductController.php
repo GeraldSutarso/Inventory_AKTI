@@ -212,60 +212,6 @@ class ProductController extends Controller
         return response()->download($filePath, 'QR_' . $product->name . '.png');
     }
 
-    public function updateStock(Request $request, $id)
-    {
-        // Validate input
-        $request->validate([
-            'action_type' => 'required|in:tambah,kurang',
-            'stock_value' => 'required|integer|min:1',
-        ]);
-
-        $product = Product::findOrFail($id);
-        $actionType = $request->input('action_type');
-        $quantity = $request->input('stock_value');
-
-        // Prevent negative stock for reduction
-        if ($actionType === 'kurang' && $quantity > $product->stock) {
-            return back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
-        }
-
-        // Update stock
-        if ($actionType === 'tambah') {
-            $product->stock += $quantity;
-            
-            // Check if stock exceeds maximum
-            if ($product->stock > $product->stock_max) {
-                session()->flash('warning', 'Stok melebihi batas maksimum (' . $product->stock_max . ')');
-            }
-        } else {
-            $product->stock -= $quantity;
-            
-            // Check if stock is below minimum
-            if ($product->stock < $product->stock_min && $product->stock > 0) {
-                session()->flash('warning', 'Stok berada di bawah batas minimum (' . $product->stock_min . ')');
-            } else if ($product->stock <= 0) {
-                session()->flash('danger', 'Stok habis atau negatif');
-            }
-        }
-
-        $product->save();
-
-        // Save to ProductSupplies (record stock changes)
-        ProductSupplies::create([
-            'product_id' => $product->id,
-            'user_id' => Auth::id(),
-            'quantity' => $quantity,
-            'type' => $actionType,
-            'date' => now(),
-        ]);
-
-        if (!session()->has('warning') && !session()->has('danger')) {
-            session()->flash('success', 'Stok berhasil diperbarui!');
-        }
-
-        return back();
-    }
-
     // Method to check stock status for color coding
     public function getStockStatus($product)
     {

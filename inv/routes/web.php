@@ -60,8 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/ubah-kategori/{id}', [CategoryController::class, 'update']);
     Route::get('/excel/kategori',[CategoryController::class,'exportExcel']);
 
-    Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
-
     Route::get('/admin', [UserController::class, 'admin'])->middleware('role:admin');
     Route::get('/petugas', [UserController::class, 'officer'])->middleware('role:admin');
     Route::delete('/hapus-petugas/{id}', [UserController::class, 'delete'])->middleware('role:admin');

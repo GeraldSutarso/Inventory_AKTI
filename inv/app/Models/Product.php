@@ -28,6 +28,10 @@ class Product extends Model
     {
         return QrCode::size(200)->generate(route('products.show', $this->id));
     }
+    public function supplies()
+    {
+        return $this->hasMany(ProductSupplies::class);
+    }
 }
 
 
