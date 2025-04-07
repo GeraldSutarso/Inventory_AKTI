@@ -95,12 +95,14 @@
                 <div class="flex gap-3">
                     {{-- Product Selection Dropdown (Hidden by default) --}}
                     <select id="productSelector" class="form-select w-48 border rounded-md px-2 py-1 hidden">
+                        <option value="">Semua Produk</option> {{-- 🟢 This resets to default --}}
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" {{ $selectedProductId == $product->id ? 'selected' : '' }}>
                                 {{ $product->name }}
                             </option>
                         @endforeach
                     </select>
+                    
     
                     {{-- Chart Type Dropdown --}}
                     <select id="chartSelector" class="form-select w-48 border rounded-md px-2 py-1">
@@ -158,6 +160,7 @@
                 }
             ]
         },
+        stockTrendsByProduct: @json($stockTrendsByProduct, JSON_NUMERIC_CHECK),
         supplyTypesDistribution: @json($supplyTypesDistribution),
         categoryStock: {
             type: 'pie',
@@ -210,16 +213,24 @@
                     labels: ["Barang Masuk", "Barang Keluar"],
                     datasets: [{
                         data: [
-                            chartData.supplyTypesDistribution.reduce((sum, item) => sum + (item.incoming || 0), 0),
-                            chartData.supplyTypesDistribution.reduce((sum, item) => sum + (item.outgoing || 0), 0)
+                            chartData.supplyTypesDistribution.reduce((sum, item) => sum + Number(item.incoming || 0), 0),
+                            chartData.supplyTypesDistribution.reduce((sum, item) => sum + Number(item.outgoing || 0), 0)
                         ],
+
                         backgroundColor: ["rgba(75, 192, 192, 0.6)", "rgba(255, 159, 64, 0.6)"]
                     }]
                 };
             }
+        } else if (chartType === "stockTrends") {
+            if (productId && chartData.stockTrendsByProduct && chartData.stockTrendsByProduct[productId]) {
+                data = chartData.stockTrendsByProduct[productId];
+            } else {
+                data = chartData.stockTrends;
+            }
         } else {
             data = chartData[chartType];
         }
+
 
         if (!data) return;
 
@@ -254,13 +265,15 @@
     const productSelector = document.getElementById("productSelector");
 
     chartSelector.addEventListener("change", function () {
-        if (this.value === "supplyTypesDistribution") {
-            productSelector.classList.remove("hidden");
-        } else {
-            productSelector.classList.add("hidden");
-        }
+        if (["stockTrends", "supplyTypesDistribution"].includes(this.value)) {
+                productSelector.classList.remove("hidden");
+            } 
+        else {
+                productSelector.classList.add("hidden");
+            }
         updateChart(this.value, productSelector.value);
     });
+    
 
     // 🟢 Product Selection Change Event
     productSelector.addEventListener("change", function () {
@@ -269,6 +282,8 @@
 
     // 🔵 Initial Chart Load
     updateChart("stockTrends");
+    productSelector.classList.remove("hidden");
+
 });
 
 </script>

@@ -33,15 +33,56 @@ class OverviewController extends Controller
             ->orderBy('date_time')
             ->get();
 
+        // 🔁 Movement Trends by Product
+        $movementTrendsByProduct = Product::with(['supplies' => function ($query) {
+            $query->selectRaw("
+                    product_id,
+                    DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as date_time,
+                    SUM(CASE WHEN type = 'tambah' THEN quantity ELSE 0 END) as incoming,
+                    SUM(CASE WHEN type = 'kurang' THEN quantity ELSE 0 END) as outgoing
+                ")
+                ->where('created_at', '>=', now()->subDays(30))
+                ->groupByRaw("product_id, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i')")
+                ->orderBy('date_time');
+        }])->get();
+
+        $stockTrendsByProduct = [];
+
+        foreach ($movementTrendsByProduct as $product) {
+            if ($product->supplies->isEmpty()) continue;
+
+            $stockTrendsByProduct[$product->id] = [
+                'type' => 'line',
+                'labels' => $product->supplies->pluck('date_time'),
+                'datasets' => [
+                    [
+                        'label' => 'Barang Masuk',
+                        'data' => $product->supplies->pluck('incoming'),
+                        'borderColor' => 'green',
+                        'backgroundColor' => 'rgba(0, 255, 0, 0.2)',
+                        'fill' => true
+                    ],
+                    [
+                        'label' => 'Barang Keluar',
+                        'data' => $product->supplies->pluck('outgoing'),
+                        'borderColor' => 'red',
+                        'backgroundColor' => 'rgba(255, 0, 0, 0.2)',
+                        'fill' => true
+                    ]
+                ]
+            ];
+        }
+
     
-        // Fetch supply type distribution for the selected product
+        // 2️⃣ Supply Types Distribution (pie Chart)
         $supplyTypesDistribution = ProductSupplies::selectRaw("
                 product_id,
-                SUM(CASE WHEN type = 'tambah' THEN quantity ELSE 0 END) as incoming,
-                SUM(CASE WHEN type = 'kurang' THEN quantity ELSE 0 END) as outgoing
+                CAST(SUM(CASE WHEN type = 'tambah' THEN quantity ELSE 0 END) AS UNSIGNED) as incoming,
+                CAST(SUM(CASE WHEN type = 'kurang' THEN quantity ELSE 0 END) AS UNSIGNED) as outgoing
             ")
             ->groupBy('product_id')
             ->get();
+    
 
     
         // 3️⃣ Category-wise Product Stock (Pie Chart)
@@ -106,6 +147,9 @@ class OverviewController extends Controller
                 // product selection
                 'products' => Product::select('id', 'name')->orderBy('name')->get(),
                 'selectedProductId' => request('product_id', null),
+
+                'stockTrendsByProduct' => $stockTrendsByProduct,
+
             ]);
             
     }
