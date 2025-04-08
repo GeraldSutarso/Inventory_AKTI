@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductActivity;
 use App\Models\ProductSupplies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -124,6 +125,45 @@ class OverviewController extends Controller
         $normalStockProducts = Product::whereBetween('stock', ['stock_min', 'stock_max'])
             ->where('stock', '>', 0)
             ->get();
+
+
+
+        
+
+        // 🔄 (Activity Feed)
+        // Get logs from the last 90 days
+        $daysBack = 90; // Change to 180 for 6 months
+        $cutoffDate = now()->subDays($daysBack);
+
+        $activityLogs = ProductActivity::where('created_at', '>=', $cutoffDate)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($activity) {
+                return [
+                    'user_name' => $activity->user_name,
+                    'description' => $activity->description,
+                    'created_at' => $activity->created_at,
+                ];
+            });
+
+
+        // Get recent product supplies
+        $supplies = ProductSupplies::with('user', 'product')->latest()->take(10)->get();
+        foreach ($supplies as $supply) {
+            $desc = $supply->type === 'tambah'
+                ? "menambahkan {$supply->quantity} stok ke {$supply->product->name}"
+                : "mengambil {$supply->quantity} stok dari {$supply->product->name}";
+
+            $activityLogs->push([
+                'user_name' => $supply->user->name ?? 'Unknown',
+                'description' => $desc,
+                'created_at' => $supply->created_at,
+            ]);
+        }
+
+        // // Sort by time (newest first)
+        // $activityLogs = $activityLogs->sortByDesc('created_at')->take(10)->values();
+
     
             return view('dashboard.overview.index', [
                 // Basic counts
@@ -149,6 +189,10 @@ class OverviewController extends Controller
                 'selectedProductId' => request('product_id', null),
 
                 'stockTrendsByProduct' => $stockTrendsByProduct,
+
+                // Activity feed
+                'activityLogs' => $activityLogs,
+
 
             ]);
             

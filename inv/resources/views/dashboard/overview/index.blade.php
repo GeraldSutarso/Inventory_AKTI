@@ -87,22 +87,21 @@
     </div>
     {{-- 📈 Charts Section --}}
     <div class="mt-5 grid grid-cols-1 md:grid-cols-5 gap-6">
-        {{-- Charts Container (3/4 width) --}}
+        {{-- 📊 Charts Container (3/5 width) --}}
         <div class="md:col-span-3 bg-white rounded-lg shadow-lg p-6">
             <div class="flex justify-between items-center border-b pb-3 mb-5">
                 <h1 class="text-gray-700 font-bold text-xl">📊 Analisis Produk</h1>
     
                 <div class="flex gap-3">
-                    {{-- Product Selection Dropdown (Hidden by default) --}}
+                    {{-- Product Selection Dropdown --}}
                     <select id="productSelector" class="form-select w-48 border rounded-md px-2 py-1 hidden">
-                        <option value="">Semua Produk</option> {{-- 🟢 This resets to default --}}
+                        <option value="">Semua Produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" {{ $selectedProductId == $product->id ? 'selected' : '' }}>
                                 {{ $product->name }}
                             </option>
                         @endforeach
                     </select>
-                    
     
                     {{-- Chart Type Dropdown --}}
                     <select id="chartSelector" class="form-select w-48 border rounded-md px-2 py-1">
@@ -121,12 +120,31 @@
             </div>
         </div>
     
-        {{-- Placeholder for future additional content (1/4 width) --}}
-        <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-gray-700 font-bold text-xl border-b pb-3 mb-5">📋 Informasi Tambahan</h2>
-            <p class="text-gray-500 text-center">Ruang untuk informasi tambahan</p>
+        {{-- 📋 Activity Log Container (2/5 width) --}}
+        <div class="md:col-span-2 bg-white rounded-lg shadow-lg p-6 flex flex-col" style="height: 24rem;">
+            <div class="flex items-center justify-between cursor-pointer" onclick="toggleSort()">
+                <h2 class="text-gray-700 font-bold text-xl">📋 Aktivitas Produk</h2>
+                <span id="sort-icon" class="text-gray-500 text-sm">▼</span>
+            </div>
+    
+            <hr class="my-3 border-gray-300">
+    
+            <div id="activity-log-container"
+                class="space-y-4 overflow-y-auto pr-2"
+                style="flex-grow: 1; min-height: 0;">
+                @foreach ($activityLogs as $log)
+                    <div class="text-sm text-gray-700 activity-item" data-created="{{ $log['created_at'] }}">
+                        <span class="font-semibold">{{ $log['user_name'] }}</span>
+                        {{ ucfirst($log['description']) }}
+                        <span class="text-xs text-gray-400 block">
+                            {{ \Carbon\Carbon::parse($log['created_at'])->diffForHumans() }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
+
     
     
 
@@ -288,4 +306,27 @@
 
 </script>
     
+{{-- For activity feed --}}
+<script>
+    let ascending = false;
+
+    function toggleSort() {
+        ascending = !ascending;
+        const container = document.getElementById('activity-log-container');
+        const icon = document.getElementById('sort-icon');
+        icon.textContent = ascending ? '▲' : '▼';
+
+        const items = Array.from(container.querySelectorAll('.activity-item'));
+
+        items.sort((a, b) => {
+            const timeA = new Date(a.dataset.created);
+            const timeB = new Date(b.dataset.created);
+            return ascending ? timeA - timeB : timeB - timeA;
+        });
+
+        // Remove and re-append sorted elements
+        items.forEach(item => container.appendChild(item));
+    }
+</script>
+
 @endsection

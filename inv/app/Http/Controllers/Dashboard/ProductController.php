@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\ProductSupplies;
+use App\Models\ProductActivity;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -37,13 +38,25 @@ class ProductController extends Controller
 
     public function delete ($id) {
         $product = Product::findOrFail($id);
+        $productName = $product->name;
+        $productId = $product->id;
+        
         Storage::delete($product->image);
         $deletedProduct = $product->delete();
-
-        if($deletedProduct){
+        
+        if ($deletedProduct) {
+            ProductActivity::create([
+                'user_id' => Auth::id(),
+                'user_name' => Auth::user()->name,
+                'product_id' => $productId,
+                'product_name' => $productName,
+                'action' => 'delete',
+                'description' => 'Menghapus produk: ' . $productName,
+            ]);
+        
             session()->flash('message', 'berhasil hapus data');
-            return response()->json(['message'=> 'success delete data'],200);
-        }
+            return response()->json(['message'=> 'success delete data'], 200);
+        }        
     }
 
     public function create()
@@ -94,6 +107,15 @@ class ProductController extends Controller
         $product->image = $imageDir . '/' . $imageName;
         $product->save();
 
+        ProductActivity::create([
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name,
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'action' => 'create',
+            'description' => 'Menambahkan produk baru: ' . $product->name,
+        ]);
+        
         return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
     }
     
@@ -150,6 +172,16 @@ class ProductController extends Controller
         $product->stock_min = $request->stock_min;
         $product->stock_max = $request->stock_max;
         $product->save();
+
+        ProductActivity::create([
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name,
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'action' => 'update',
+            'description' => 'Mengupdate produk: ' . $product->name,
+        ]);
+        
 
         return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
     }
