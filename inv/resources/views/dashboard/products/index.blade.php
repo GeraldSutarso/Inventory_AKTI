@@ -116,7 +116,7 @@
                                 @if ($product->qr_code)
                                     <img src="{{ asset('storage/' . $product->qr_code) }}" 
                                         alt="QR Code for {{ $product->name }}"
-                                        class="w-24 h-24 md:w-28 md:h-28 mx-auto object-contain rounded-lg shadow-md">
+                                        class="w-24 h-24 md:w-28 md:h-28 mx-auto object-contain lg shadow-md">
                                 @else
                                     <a href="{{ route('products.qr', $product->id) }}" 
                                         class="text-blue-600 hover:text-blue-800 text-sm">Generate QR</a>
@@ -157,27 +157,63 @@
     }, 3000);
 
     // Delete product functionality
-    document.querySelectorAll('.btn-delete-product').forEach(button => {
-        button.addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin menghapus barang ini?')) {
-                const id = this.getAttribute('data-id');
+// SweetAlert2 delete confirmation
+document.querySelectorAll('.btn-delete-product').forEach(button => {
+    button.addEventListener('click', function () {
+        const id = this.getAttribute('data-id');
+
+        Swal.fire({
+            title: 'Yakin ingin menghapus barang ini?',
+            text: 'Data barang akan dihapus secara permanen.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e3342f',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
                 fetch(`/barang/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                })
+  method: 'DELETE',
+  headers: {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    'Accept': 'application/json'
+  }
+})
+
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === 'success delete data') {
-                        location.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Barang berhasil dihapus.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            text: 'Gagal menghapus barang.',
+                        });
                     }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan saat menghapus.',
+                    });
                 });
             }
         });
     });
+});
+
 
 </script>
 @endsection

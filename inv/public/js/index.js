@@ -61,10 +61,11 @@ document.querySelectorAll(".btn-delete-category").forEach((btnDelete) => {
 document.querySelectorAll(".btn-delete-product").forEach((btnDelete) => {
     deleteModal(
         btnDelete,
-        "/hapus-barang",
+        "/barang", // 👈 match your current Laravel route
         "data yang telah dihapus tidak bisa dikembalikan"
     );
 });
+
 
 document.querySelectorAll(".btn-delete-supplier").forEach((btnDelete) => {
     deleteModal(

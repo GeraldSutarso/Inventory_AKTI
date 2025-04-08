@@ -103,3 +103,5 @@ Route::middleware('guest')->group(function() {
 
 Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
 Route::get('/label', [LabelController::class, 'index'])->name('label.index');
+
+Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');

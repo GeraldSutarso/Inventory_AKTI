@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id');
+            $table->foreignId('category_id')->constrained(); // shorthand for foreign key constraint
             $table->string('name');
-            $table->string('stock')->default(0);
+            $table->unsignedInteger('stock')->default(0);     // ✅ better as integer
+            $table->unsignedInteger('stock_min')->nullable(); // ✅ add
+            $table->unsignedInteger('stock_max')->nullable(); // ✅ add
             $table->integer('price');
             $table->string('image')->nullable();
+            // $table->string('qr_code')->nullable();            // ✅ add
             $table->timestamps();
-
-            $table->foreign('category_id')->references('id')->on('categories');
         });
+        
     }
 
     /**

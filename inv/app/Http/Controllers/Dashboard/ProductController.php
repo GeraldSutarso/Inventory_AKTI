@@ -36,28 +36,29 @@ class ProductController extends Controller
         return view('dashboard.products.index', ['products'=>$products]);
     }
 
-    public function delete ($id) {
-        $product = Product::findOrFail($id);
-        $productName = $product->name;
-        $productId = $product->id;
-        
-        Storage::delete($product->image);
-        $deletedProduct = $product->delete();
-        
-        if ($deletedProduct) {
-            ProductActivity::create([
-                'user_id' => Auth::id(),
-                'user_name' => Auth::user()->name,
-                'product_id' => $productId,
-                'product_name' => $productName,
-                'action' => 'delete',
-                'description' => 'Menghapus produk: ' . $productName,
-            ]);
-        
-            session()->flash('message', 'berhasil hapus data');
-            return response()->json(['message'=> 'success delete data'], 200);
-        }        
-    }
+    public function delete(Product $product)
+{
+    $productName = $product->name;
+    $productId = $product->id;
+    
+    Storage::delete($product->image);
+    $deletedProduct = $product->delete();
+    
+    if ($deletedProduct) {
+        ProductActivity::create([
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()->name,
+            'product_id' => $productId,
+            'product_name' => $productName,
+            'action' => 'delete',
+            'description' => 'Menghapus produk: ' . $productName,
+        ]);
+
+        session()->flash('message', 'berhasil hapus data');
+        return response()->json(['message'=> 'success delete data'], 200);
+    }  
+}
+
 
     public function create()
 {
@@ -185,6 +186,67 @@ class ProductController extends Controller
 
         return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
     }
+
+    public function updateStock(Request $request, $id)
+    {
+        // ✅ Validate input and store it in $validated
+        $validated = $request->validate([
+            'action_type' => 'required|in:tambah,kurang',
+            'stock_value' => 'required|integer|min:1',
+        ]);
+    
+        // ✅ Get the product
+        $product = Product::findOrFail($id);
+        $actionType = $validated['action_type'];
+        $quantity = $validated['stock_value'];
+    
+        // ✅ Determine new stock for record-keeping
+        $newStock = $actionType === 'tambah'
+            ? $product->stock + $quantity
+            : $product->stock - $quantity;
+    
+        // ❌ Prevent negative stock
+        if ($actionType === 'kurang' && $quantity > $product->stock) {
+            return back()->with('error', 'Stok tidak mencukupi untuk barang keluar!');
+        }
+    
+        // ✅ Update stock & check thresholds
+        if ($actionType === 'tambah') {
+            $product->stock = $newStock;
+    
+            if (!is_null($product->stock_max) && $product->stock > $product->stock_max) {
+                session()->flash('warning', 'Stok melebihi batas maksimum (' . $product->stock_max . ')');
+            }
+        } else {
+            $product->stock = $newStock;
+    
+            if (!is_null($product->stock_min) && $product->stock < $product->stock_min && $product->stock > 0) {
+                session()->flash('warning', 'Stok berada di bawah batas minimum (' . $product->stock_min . ')');
+            } elseif ($product->stock <= 0) {
+                session()->flash('danger', 'Stok habis atau negatif');
+            }
+        }
+    
+        $product->save();
+    
+        // ✅ Log the supply action
+        ProductSupplies::create([
+            'product_id' => $product->id,
+            'user_id' => Auth::id(),
+            'quantity' => $quantity,
+            'type' => $actionType,
+            'stock' => $newStock,
+            'date' => now(),
+        ]);
+    
+        // ✅ Set success message if no warning/danger
+        if (!session()->has('warning') && !session()->has('danger')) {
+            session()->flash('success', 'Stok berhasil diperbarui!');
+        }
+    
+        return back();
+    }
+    
 
     public function getAllProducts () {
         $products = Product::all();
