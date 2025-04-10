@@ -10,6 +10,7 @@ use App\Http\Controllers\Dashboard\SupplierController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\ExportPDFController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,3 +106,8 @@ Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scann
 Route::get('/label', [LabelController::class, 'index'])->name('label.index');
 
 Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
+
+Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])->name('export.products.pdf');
+
+
+     

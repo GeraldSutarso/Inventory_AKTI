@@ -129,6 +129,10 @@
                                     <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">⬇ Download QR</a>
                                     <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
                                         class="bg-purple-500 hover:bg-purple-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">📦 Update Stok</a>
+                                    <a href="{{ route('export.products.pdf', $product->id) }}" 
+                                        class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">
+                                        ⬇ Export PDF
+                                    </a>                                        
                                 </div>
                             </td>
                         </tr>

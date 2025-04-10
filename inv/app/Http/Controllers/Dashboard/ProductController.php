@@ -14,6 +14,9 @@ use App\Models\ProductSupplies;
 use App\Models\ProductActivity;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
+
 
 class ProductController extends Controller
 {
@@ -318,5 +321,17 @@ class ProductController extends Controller
         } else {
             return 'normal'; // Between min and max
         }
+    }
+
+    public function exportPdf($id)
+    {
+        $product = Product::findOrFail($id);
+        
+        // Karena view expects $products (plural), kita bungkus jadi array
+        $pdf = Pdf::loadView('dashboard.products.pdf', ['products' => [$product]])
+        ->setPaper('a5', 'landscape');
+
+        return $pdf->download('produk-' . Str::slug($product->name) . '.pdf');
+
     }
 }
