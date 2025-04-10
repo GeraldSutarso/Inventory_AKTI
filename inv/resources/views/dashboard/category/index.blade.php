@@ -42,6 +42,7 @@
                     @foreach ($categories as $category)
                         <tr class="border-t hover:bg-gray-50 transition">
                             <td class="p-3">{{ $noCategory }}</td>
+                            <td class="p-3">{{ $category->room }}</td>
                             <td class="p-3">{{ $category->name }}</td>
                             <td class="p-3 flex justify-center gap-3">
                                 <button data-id="{{ $category->id }}" class="btn-delete-category bg-red-500 text-white px-4 py-1 rounded shadow hover:bg-red-600 transition">
