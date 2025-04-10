@@ -75,6 +75,7 @@
                         <td class="p-3">
                             <span class="@if($activity->type === 'tambah') text-green-500 @else text-red-500 @endif">
                                 {{ $activity->type === 'tambah' ? '+' : '-' }}{{ $activity->quantity }}
+                                <span class="text-gray-500 text-xs">{{ $activity->product->unit }}</span>
                             </span>
                         </td>
                         <td class="p-3 font-semibold">
@@ -96,7 +97,8 @@
                             @endphp
 
                         
-                            <span class="{{ $color }}">{{ $stock }}</span>
+                            <span class="{{ $color }}">{{ $stock }} <span class="text-gray-500 text-xs">{{ $activity->product->unit }}</span></span>
+
                         </td>
                         
                         <td class="p-3 flex justify-center space-x-2">

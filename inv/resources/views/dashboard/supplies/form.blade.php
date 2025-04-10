@@ -43,16 +43,20 @@
             <!-- Quantity Input -->
             <div class="mb-4">
                 <label class="text-sm text-gray-700 font-semibold" for="quantity">Jumlah</label>
-                <input name="quantity" 
-                       value="{{ old('quantity', $supply->quantity ?? '') }}"
-                       class="border border-gray-300 rounded-md w-full p-2 focus:ring-2 focus:ring-blue-500 transition" 
-                       type="number" 
-                       min="1" 
-                       required>
+                <div class="flex items-center gap-2">
+                    <input name="quantity" 
+                        value="{{ old('quantity', $supply->quantity ?? '') }}"
+                        class="border border-gray-300 rounded-md w-full p-2 focus:ring-2 focus:ring-blue-500 transition" 
+                        type="number" 
+                        min="1" 
+                        required>
+                    <span id="unit-label" class="text-gray-600 text-sm whitespace-nowrap"></span>
+                </div>
                 @error('quantity')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
 
             <!-- Activity Date Picker -->
             <div class="mb-4">
@@ -80,4 +84,19 @@
         </form>
     </div>
 </div>
+
+<script>
+    const products = @json($products->mapWithKeys(fn($p) => [$p->id => $p->unit]));
+
+    function updateUnitLabel() {
+        const selectedProductId = document.querySelector('select[name="product_id"]').value;
+        const unitLabel = products[selectedProductId] || '';
+        document.getElementById('unit-label').textContent = unitLabel;
+    }
+
+    // Update on load and on change
+    document.addEventListener('DOMContentLoaded', updateUnitLabel);
+    document.querySelector('select[name="product_id"]').addEventListener('change', updateUnitLabel);
+</script>
+
 @endsection
