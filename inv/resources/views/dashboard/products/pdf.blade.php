@@ -31,7 +31,7 @@
         }
 
         .logo {
-            width: 120px;
+            width: 130px;
             height: auto;
         }
 
@@ -72,13 +72,13 @@
         .footer {
             text-align: left;
             margin-top: 10px;
-            font-size: 9px;
-            color: #6b7280;
+            font-size: 10px;
+            color: #00000;
         }
 
         .ttd-table {
             width: 100%;
-            margin-top: 15px;
+            margin-top: 10px;
             font-size: 10px;
             border-collapse: collapse;
         }
@@ -143,22 +143,22 @@
             <div class="title">FORM PERMINTAAN BARANG</div>
         </div>
 
-        <table>
+        <table style="width: 100%; table-layout: fixed; margin-top: 5px;">
             <thead>
                 <tr>
-                    <th>NO</th>
-                    <th>NAMA BARANG</th>
-                    <th>QUALITY</th>
-                    <th>Vendor TMMIN</th>
-                    <th>Vendor AKTI</th>
-                    <th>KETERANGAN</th>
+                    <th style="width: 5%;">NO</th>
+                    <th style="width: 35%; text-align: left;">NAMA BARANG</th>
+                    <th style="width: 10%;">QUALITY</th>
+                    <th style="width: 10%;">Vendor TMMIN</th>
+                    <th style="width: 10%;">Vendor AKTI</th>
+                    <th style="width: 30%;">KETERANGAN</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($products as $index => $product)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td style="text-align: left;">{{ $product->name }}</td>
+                    <td style="height: 50px;">{{ $index + 1 }}</td>
+                    <td style="text-align: left; word-wrap: break-word;">{{ $product->name }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -167,11 +167,41 @@
                 @endforeach
             </tbody>
         </table>
+        
 
         <div class="footer">
             Dicetak pada: {{ now()->format('d F Y H:i') }}
         </div>
         
+
+        <table style="width: 50%; margin-top: 10px; margin-bottom: 15px;">
+            <thead>
+                <tr>
+                    <th style="width: 30%; text-align: center;">Mengetahui</th>
+                    <th style="width: 30%; text-align: center;">Disetujui</th>
+                    <th style="width: 30%; text-align: center;">Pemohon</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="height: 40px;"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th style="width: 30%; text-align: center;">Sarpras</th>
+                    <th style="width: 30%; text-align: center;"></th>
+                    <th style="width: 30%; text-align: center;"></th>
+                </tr>
+            </thead>
+        </table>
+
+        <div style="font-size: 10px; margin-top: 10px; margin-bottom: 20px;">
+            Ext. : <br>
+            HP. No :
+        </div>
 
         <ul class="note-list">
             <li>Disetujui oleh Ka. Unit</li>
@@ -180,6 +210,11 @@
             <li>Barang Impor dapat diterima selama 3 bulan dari pengajuan</li>
             <li>Barang yang datang harus diambil sesuai jumlah permintaan</li>
         </ul>
+
+        <div style="font-size: 9px; text-align: center; margin-top: 15px;">
+            Dibuat oleh Website Inventori AKTI
+        </div>
+
     </div>
 </body>
 </html>
