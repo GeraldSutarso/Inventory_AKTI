@@ -11,14 +11,23 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index (Request $request) {
-        if($request->has('search')) {
-            $categories = Category::where('name', 'LIKE', "%{$request->search}%")->paginate();
-        } else {
-            $categories = Category::paginate(10);
+    public function index(Request $request)
+    {
+        $query = Category::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('room', 'LIKE', "%{$search}%");
+            });
         }
-        return view('dashboard.category.index', ['categories'=>$categories]);
+
+        $categories = $query->paginate(10);
+
+        return view('dashboard.category.index', ['categories' => $categories]);
     }
+
 
     public function create () {
         return view('dashboard.category.input');
@@ -26,10 +35,12 @@ class CategoryController extends Controller
 
     public function store (Request $request) {
         $this->validate($request, [
+            'room'=> ['required'],
             'name'=> ['required']
         ]);
 
        $created = Category::create([
+            'room'=>$request->room,
             'name'=>$request->name
        ]);
 
@@ -55,11 +66,13 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id) {
         $this->validate($request, [
+            'room'=> ['required'],
             'name'=> ['required']
         ]);
 
         $category = Category::findOrFail($id);
         $updated = $category->update([
+            'room'=>$request->room,
             'name'=>$request->name
         ]);
 
