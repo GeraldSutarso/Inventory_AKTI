@@ -23,6 +23,23 @@ class UserController extends Controller
         return view('dashboard.officer.index', ['officers'=>$officers]);
     }
 
+    public function head(Request $request) {
+        $heads = User::where('role', 'head')
+            ->when($request->search, fn($q) => $q->where('name', 'like', "%{$request->search}%"))
+            ->paginate(10);
+    
+        return view('dashboard.head.index', ['heads' => $heads]);
+    }
+    
+    public function sarpras(Request $request) {
+        $sarpras = User::where('role', 'sarpras')
+            ->when($request->search, fn($q) => $q->where('name', 'like', "%{$request->search}%"))
+            ->paginate(10);
+    
+        return view('dashboard.sarpras.index', ['sarpras' => $sarpras]);
+    }
+    
+
     public function delete($id) {
         $user = User::findOrFail($id);
         $deletedUser = $user->delete();
@@ -142,5 +159,101 @@ class UserController extends Controller
         return redirect('/admin')->with('message','data berhasil diubah');
     }
     }
+
+    public function createHead() {
+        return view('dashboard.head.input');
+    }
+    
+    public function storeHead(Request $request) {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
+    
+        $created = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'head'
+        ]);
+    
+        if ($created) {
+            return redirect('/kepala-unit')->with('message', 'data berhasil ditambahkan');
+        }
+    }
+    
+    public function editHead($id) {
+        $head = User::findOrFail($id);
+        return view('dashboard.head.update', ['head' => $head]);
+    }
+    
+    public function updateHead(Request $request, $id) {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+        ]);
+    
+        $head = User::findOrFail($id);
+        $password = $request->filled('password') ? Hash::make($request->password) : $head->password;
+    
+        $updated = $head->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $password,
+            'role' => 'head'
+        ]);
+    
+        if ($updated) {
+            return redirect('/kepala-unit')->with('message', 'data berhasil diubah');
+        }
+    }
+    
+    public function createSarpras() {
+        return view('dashboard.sarpras.input');
+    }
+    public function storeSarpras(Request $request) {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required']
+        ]);
+    
+        $created = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'sarpras'
+        ]);
+    
+        if ($created) {
+            return redirect('/sarpras')->with('message', 'data berhasil ditambahkan');
+        }
+    }
+    public function editSarpras($id) {
+        $sarpras = User::findOrFail($id);
+        return view('dashboard.sarpras.update', ['sarpras' => $sarpras]);
+    }
+    public function updateSarpras(Request $request, $id) {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+        ]);
+    
+        $sarpras = User::findOrFail($id);
+        $password = $request->filled('password') ? Hash::make($request->password) : $sarpras->password;
+    
+        $updated = $sarpras->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $password,
+            'role' => 'sarpras'
+        ]);
+    
+        if ($updated) {
+            return redirect('/sarpras')->with('message', 'data berhasil diubah');
+        }
+    }
+
 
 }

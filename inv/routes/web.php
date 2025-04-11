@@ -70,11 +70,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/ubah-petugas/{id}', [UserController::class, 'editOfficer'])->middleware('role:admin');
     Route::post('/ubah-petugas/{id}', [UserController::class, 'updateOfficer'])->middleware('role:admin');
 
-    Route::get('/input-admin', [UserController::class, 'createAdmin']);
-    Route::post('/input-admin', [UserController::class, 'storeAdmin']);
-    Route::delete('/hapus-admin/{id}', [UserController::class, 'delete']);
-    Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin']);
-    Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin']);
+    Route::get('/input-admin', [UserController::class, 'createAdmin'])->middleware('role:admin');
+    Route::post('/input-admin', [UserController::class, 'storeAdmin'])->middleware('role:admin');
+    Route::delete('/hapus-admin/{id}', [UserController::class, 'delete'])->middleware('role:admin');
+    Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin'])->middleware('role:admin');
+    Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin'])->middleware('role:admin');
+
+    // Head (Kepala Unit)
+    Route::get('/kepala-unit', [UserController::class, 'head']);
+    Route::get('/input-kepala', [UserController::class, 'createHead'])->middleware('role:admin');
+    Route::post('/input-kepala', [UserController::class, 'storeHead'])->middleware('role:admin');
+    Route::get('/ubah-kepala/{id}', [UserController::class, 'editHead'])->middleware('role:admin');
+    Route::post('/ubah-kepala/{id}', [UserController::class, 'updateHead'])->middleware('role:admin');
+    Route::delete('/hapus-kepala/{id}', [UserController::class, 'delete'])->middleware('role:admin');
+
+    // Sarpras
+    Route::get('/sarpras', [UserController::class, 'sarpras']);
+    Route::get('/input-sarpras', [UserController::class, 'createSarpras'])->middleware('role:admin');
+    Route::post('/input-sarpras', [UserController::class, 'storeSarpras'])->middleware('role:admin');
+    Route::get('/ubah-sarpras/{id}', [UserController::class, 'editSarpras'])->middleware('role:admin');
+    Route::post('/ubah-sarpras/{id}', [UserController::class, 'updateSarpras'])->middleware('role:admin');
+    Route::delete('/hapus-sarpras/{id}', [UserController::class, 'deleteSarpras'])->middleware('role:admin');
+
 
     Route::resource('supplies', ProductSuppliesController::class)
     ->except(['show'])
