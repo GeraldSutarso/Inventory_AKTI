@@ -12,7 +12,7 @@
             @csrf
 
             <div class="mb-4">
-                <label class="block text-sm text-gray-700 font-semibold" for="room">Nama Ruangan</label>
+                <label class="block text-sm text-gray-700 font-semibold" for="room">Ruangan</label>
                 <div class="border-2 p-2 rounded-lg @error('room') border-red-400 @enderror">
                     <input name="room" value="{{ old('room') }}" class="w-full focus:outline-none text-sm p-1" id="room" type="text" placeholder="Masukkan nama ruangan">
                 </div>
@@ -21,9 +21,9 @@
                 @enderror
             </div>
             <div class="mb-4">
-                <label class="block text-sm text-gray-700 font-semibold" for="name">Nama Lokasi</label>
+                <label class="block text-sm text-gray-700 font-semibold" for="name">Posisi</label>
                 <div class="border-2 p-2 rounded-lg @error('name') border-red-400 @enderror">
-                    <input name="name" value="{{old('name')}}" class="w-full focus:outline-none text-sm p-1" id="name" type="text" placeholder="Masukkan nama Lokasi">
+                    <input name="name" value="{{old('name')}}" class="w-full focus:outline-none text-sm p-1" id="name" type="text" placeholder="Masukkan posisi">
                 </div>
                 @error('name')
                     <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>

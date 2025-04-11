@@ -33,7 +33,7 @@
                     <tr class="bg-gray-100 text-left font-semibold">
                         <th class="p-3">No</th>
                         <th class="p-3">Ruangan</th>
-                        <th class="p-3">Nama Lokasi</th>
+                        <th class="p-3">Posisi</th>
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
