@@ -41,12 +41,34 @@
                     <a href="/excel/products" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">⬇ Export Excel</a>
                 </div>
             </div>
-            <form method="get" action="/barang" class="flex w-full md:w-auto mt-3 md:mt-0">
-                <input id="search" name="search" class="border border-gray-300 p-3 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full md:w-64" type="text" placeholder="Cari barang...">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-4 py-3 rounded-r-lg text-white text-sm">
-                    <i class="ri-search-line text-lg"></i>
-                </button>
+            <form method="GET" class="mb-4 flex flex-wrap gap-4">
+                <input type="text" name="search" placeholder="Cari..." value="{{ request('search') }}" class="border p-2">
+            
+                <select name="room" class="border p-2">
+                    <option value="">-- Ruangan --</option>
+                    @foreach($rooms as $room)
+                        <option value="{{ $room }}" {{ request('room') == $room ? 'selected' : '' }}>{{ $room }}</option>
+                    @endforeach
+                </select>
+            
+                <select name="position" class="border p-2">
+                    <option value="">-- Posisi --</option>
+                    @foreach($positions as $position)
+                        <option value="{{ $position }}" {{ request('position') == $position ? 'selected' : '' }}>{{ $position }}</option>
+                    @endforeach
+                </select>
+            
+                <select name="unit" class="border p-2">
+                    <option value="">-- Satuan --</option>
+                    @foreach($units as $unit)
+                        <option value="{{ $unit }}" {{ request('unit') == $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                    @endforeach
+                </select>
+            
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
             </form>
+            
+            
         </div>
 
         <div class="mb-4">
@@ -72,20 +94,56 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-gray-700 border border-gray-300 rounded-lg shadow-md">
-                <thead class="bg-gray-200 text-gray-700">
+                <thead class="bg-gray-200 text-black">
                     <tr>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">No</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-left">Nama Barang</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Harga</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Stok</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Min Stok</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Max Stok</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Lokasi</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Gambar</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">QR Code</th>
-                        <th class="p-2 md:p-3 border border-gray-300 text-center">Aksi</th>
+                        <th class="p-2 border text-center">No</th>
+                
+                        {{-- Nama Barang --}}
+                        <th class="p-2 border text-left text-black">
+                            {!! sortLink('Nama Barang', 'name') !!}
+                        </th>
+                
+                        {{-- Harga --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Harga', 'price') !!}
+                        </th>
+                
+                        {{-- Stok --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Stok', 'stock') !!}
+                        </th>
+                
+                        {{-- Min Stok --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Min Stok', 'min_stock') !!}
+                        </th>
+                
+                        {{-- Max Stok --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Max Stok', 'max_stock') !!}
+                        </th>
+                
+                        {{-- Satuan/Unit --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Satuan/Unit', 'unit') !!}
+                        </th>
+                
+                        {{-- Ruangan --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Ruangan', 'room') !!}
+                        </th>
+                
+                        {{-- Posisi --}}
+                        <th class="p-2 border text-center">
+                            {!! sortLink('Posisi', 'position') !!}
+                        </th>
+                
+                        <th class="p-2 border text-center">Gambar</th>
+                        <th class="p-2 border text-center">QR Code</th>
+                        <th class="p-2 border text-center">Aksi</th>
                     </tr>
                 </thead>
+                
                 <tbody class="bg-white divide-y divide-gray-300">
                     @foreach ($products as $index => $product)
                         @php
@@ -107,7 +165,9 @@
                             <td class="p-2 md:p-3 border border-gray-300 text-center font-bold">{{ $product->stock }}</td>
                             <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->stock_min }}</td>
                             <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->stock_max }}</td>
-                            <td class="p-2 md:p-3 border border-gray-300 text-center break-words">{{ $product->category }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->unit }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center">{{ $product->category->room }}</td>
+                            <td class="p-2 md:p-3 border border-gray-300 text-center break-words">{{ $product->category->name }}</td>
                             <td class="p-2 md:p-3 border border-gray-300 text-center">
                                 <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" 
                                     class="w-20 h-20 md:w-24 md:h-24 mx-auto object-cover rounded-lg shadow-md">

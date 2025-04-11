@@ -43,38 +43,24 @@
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-gray-700 border rounded-lg overflow-hidden">
-                @php
-                    function sortIcon($field) {
-                        $currentSort = request('sort');
-                        $dir = request('direction', 'asc');
-                        if ($currentSort === $field) {
-                            return $dir === 'asc' ? ' ▲' : ' ▼';
-                        }
-                        return ' ⇅';
-                    }
-
-                    $flipDirection = request('direction', 'asc') === 'asc' ? 'desc' : 'asc';
-                    $currentSort = request('sort');
-                @endphp
-
                 <thead>
-                    <tr class="bg-gray-100 text-left font-semibold">
+                    <tr class="bg-gray-100 text-left font-semibold text-black">
                         <th class="p-3">No</th>
+                
+                        {{-- Ruangan --}}
                         <th class="p-3">
-                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'room', 'direction' => $flipDirection]) }}"
-                            class="hover:underline visited:text-gray-700 {{ $currentSort === 'room' ? 'text-blue-600 font-bold' : 'text-gray-700' }}">
-                                Ruangan{{ sortIcon('room') }}
-                            </a>
+                            {!! sortLink('Ruangan', 'room') !!}
                         </th>
+                
+                        {{-- Posisi --}}
                         <th class="p-3">
-                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => $flipDirection]) }}"
-                            class="hover:underline visited:text-gray-700 {{ $currentSort === 'name' ? 'text-blue-600 font-bold' : 'text-gray-700' }}">
-                                Posisi{{ sortIcon('name') }}
-                            </a>
+                            {!! sortLink('Posisi', 'name') !!}
                         </th>
+                
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
+                
 
 
                 <tbody>

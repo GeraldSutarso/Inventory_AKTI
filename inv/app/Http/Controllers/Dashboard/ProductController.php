@@ -20,24 +20,71 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index (Request $request) {
-        if($request->has('search')){
-            $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=' , 'categories.id')
-            ->where('products.name', "LIKE","%{$request->search}%")
-            ->select('products.*','categories.name as category')
-            ->orderBy('products.created_at')
-            ->paginate(10);
-        } else {
-             $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=' , 'categories.id')
-            ->select('products.*','categories.name as category')
-            ->orderBy('products.created_at')
-            ->paginate(10);
+    public function index(Request $request)
+    {
+        $query = Product::with('category'); // Eager load the related category
+
+        // 🔍 Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                ->orWhere('price', 'like', "%$search%")
+                ->orWhere('unit', 'like', "%$search%")
+                ->orWhereHas('category', function ($catQ) use ($search) {
+                    $catQ->where('name', 'like', "%$search%")
+                        ->orWhere('room', 'like', "%$search%");
+                });
+            });
         }
 
-        return view('dashboard.products.index', ['products'=>$products]);
+        // 🎯 Filters
+        if ($request->filled('room')) {
+            $query->whereHas('category', fn($q) => $q->where('room', $request->room));
+        }
+
+        if ($request->filled('position')) {
+            $query->whereHas('category', fn($q) => $q->where('name', $request->position));
+        }
+
+        if ($request->filled('unit')) {
+            $query->where('unit', $request->unit);
+        }
+
+        // 🔃 Sorting
+        $sortable = ['name', 'price', 'stock', 'stock_min', 'stock_max', 'unit', 'room', 'category'];
+        $sortBy = in_array($request->get('sort_by'), $sortable) ? $request->get('sort_by') : 'created_at';
+        $sortDir = $request->get('sort_dir') === 'asc' ? 'asc' : 'desc';
+
+        if (in_array($sortBy, ['room', 'category'])) {
+            // Only join if sorting by room or category name
+            $query->join('categories', 'products.category_id', '=', 'categories.id');
+
+            if ($sortBy === 'room') {
+                $query->orderBy('categories.room', $sortDir);
+            } elseif ($sortBy === 'category') {
+                $query->orderBy('categories.name', $sortDir);
+            }
+
+            // Need to explicitly select all product fields to avoid missing columns
+            $query->select('products.*');
+        } else {
+            $query->orderBy("products.$sortBy", $sortDir);
+        }
+
+
+        // 📦 Paginate
+        $products = $query->paginate(10)->withQueryString();
+
+        // 📌 Filter Options
+        $rooms = Category::select('room')->distinct()->pluck('room');
+        $positions = Category::select('name')->distinct()->pluck('name');
+        $units = Product::select('unit')->distinct()->pluck('unit');
+
+        return view('dashboard.products.index', compact('products', 'rooms', 'positions', 'units'));
     }
+
+    
 
     public function delete(Product $product)
 {
