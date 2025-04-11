@@ -18,12 +18,33 @@
                     <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Export Excel</a>
                 </div>
             </div>
-            <form method="get" action="/kategori" class="flex items-center border rounded-lg overflow-hidden">
-                <input id="search" name="search" class="px-4 py-2 text-gray-600 focus:outline-none" type="text" placeholder="Cari...">
-                <button type="submit" class="bg-gray-700 text-white px-4 py-2 hover:bg-gray-800 transition">
-                    <i class="ri-search-line text-lg"></i>
+            <form method="get" action="/kategori" class="flex gap-2 items-center flex-wrap">
+                {{-- Room Filter --}}
+                <select name="room" class="border rounded px-3 py-2 text-sm text-gray-600">
+                    <option value="">Semua Ruangan</option>
+                    @foreach ($allRooms as $room)
+                        <option value="{{ $room }}" {{ request('room') === $room ? 'selected' : '' }}>
+                            {{ $room }}
+                        </option>
+                    @endforeach
+                </select>
+            
+                {{-- Search by Name --}}
+                <input name="search" class="px-4 py-2 border rounded text-gray-600 focus:outline-none" placeholder="Cari nama posisi..." value="{{ request('search') }}">
+            
+                {{-- Sort --}}
+                <select name="sort" class="border rounded px-3 py-2 text-sm text-gray-600">
+                    <option value="">Urutkan</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
+                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Nama Z-A</option>
+                </select>
+            
+                {{-- Submit --}}
+                <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
+                    <i class="ri-search-line"></i> Filter
                 </button>
             </form>
+            
         </div>
 
         <!-- Table -->
