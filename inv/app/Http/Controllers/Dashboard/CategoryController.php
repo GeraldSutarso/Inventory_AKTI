@@ -12,44 +12,47 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Category::query();
-
-    // Filter by room
-    if ($request->filled('room')) {
-        $query->where('room', $request->input('room'));
-    }
-
-    // Search by name/position
-    if ($request->filled('search')) {
-        $searchTerms = explode(' ', $request->input('search'));
-        $query->where(function ($q) use ($searchTerms) {
-            foreach ($searchTerms as $term) {
-                $q->where('name', 'LIKE', "%{$term}%");
-            }
-        });
-    }
-
-    // Sorting
-    if ($request->filled('sort')) {
-        switch ($request->input('sort')) {
-            case 'name_asc':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('name', 'desc');
-                break;
+    {
+        $query = Category::query();
+    
+        // Filter by room
+        if ($request->filled('room')) {
+            $query->where('room', $request->input('room'));
         }
+    
+        // Multi-keyword search (room or name)
+        if ($request->filled('search')) {
+            $searchTerms = explode(' ', $request->input('search'));
+            $query->where(function ($q) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $q->where(function ($subQ) use ($term) {
+                        $subQ->where('room', 'LIKE', "%{$term}%")
+                             ->orWhere('name', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+        }
+    
+        // Sorting by header links (only room and name)
+        $sortField = match ($request->input('sort')) {
+            'room' => 'room',
+            'name' => 'name',
+            default => null,
+        };
+
+    
+        $direction = $request->input('direction', 'asc');
+    
+        if ($sortField) {
+            $query->orderBy($sortField, $direction);
+        }
+    
+        $categories = $query->paginate(10);
+        $allRooms = Category::select('room')->distinct()->pluck('room');
+    
+        return view('dashboard.category.index', compact('categories', 'allRooms'));
     }
 
-    $categories = $query->paginate(10);
-    $allRooms = Category::select('room')->distinct()->pluck('room');
-
-    return view('dashboard.category.index', [
-        'categories' => $categories,
-        'allRooms' => $allRooms,
-    ]);
-}
 
 
 

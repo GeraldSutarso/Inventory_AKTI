@@ -18,8 +18,9 @@
                     <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Export Excel</a>
                 </div>
             </div>
+
             <form method="get" action="/kategori" class="flex gap-2 items-center flex-wrap">
-                {{-- Room Filter --}}
+                <!-- Room Filter -->
                 <select name="room" class="border rounded px-3 py-2 text-sm text-gray-600">
                     <option value="">Semua Ruangan</option>
                     @foreach ($allRooms as $room)
@@ -28,41 +29,60 @@
                         </option>
                     @endforeach
                 </select>
-            
-                {{-- Search by Name --}}
+
+                <!-- Search -->
                 <input name="search" class="px-4 py-2 border rounded text-gray-600 focus:outline-none" placeholder="Cari nama posisi..." value="{{ request('search') }}">
-            
-                {{-- Sort --}}
-                <select name="sort" class="border rounded px-3 py-2 text-sm text-gray-600">
-                    <option value="">Urutkan</option>
-                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Nama A-Z</option>
-                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Nama Z-A</option>
-                </select>
-            
-                {{-- Submit --}}
+
+                <!-- Submit -->
                 <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
                     <i class="ri-search-line"></i> Filter
                 </button>
             </form>
-            
         </div>
 
         <!-- Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-gray-700 border rounded-lg overflow-hidden">
+                @php
+                    function sortIcon($field) {
+                        $currentSort = request('sort');
+                        $dir = request('direction', 'asc');
+                        if ($currentSort === $field) {
+                            return $dir === 'asc' ? ' ▲' : ' ▼';
+                        }
+                        return ' ⇅';
+                    }
+
+                    $flipDirection = request('direction', 'asc') === 'asc' ? 'desc' : 'asc';
+                    $currentSort = request('sort');
+                @endphp
+
                 <thead>
                     <tr class="bg-gray-100 text-left font-semibold">
                         <th class="p-3">No</th>
-                        <th class="p-3">Ruangan</th>
-                        <th class="p-3">Posisi</th>
+                        <th class="p-3">
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'room', 'direction' => $flipDirection]) }}"
+                            class="hover:underline visited:text-gray-700 {{ $currentSort === 'room' ? 'text-blue-600 font-bold' : 'text-gray-700' }}">
+                                Ruangan{{ sortIcon('room') }}
+                            </a>
+                        </th>
+                        <th class="p-3">
+                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => $flipDirection]) }}"
+                            class="hover:underline visited:text-gray-700 {{ $currentSort === 'name' ? 'text-blue-600 font-bold' : 'text-gray-700' }}">
+                                Posisi{{ sortIcon('name') }}
+                            </a>
+                        </th>
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
+
+
                 <tbody>
-                    @php $noCategory = 1; @endphp
                     @foreach ($categories as $category)
                         <tr class="border-t hover:bg-gray-50 transition">
-                            <td class="p-3">{{ $noCategory }}</td>
+                            <td class="p-3">
+                                {{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}
+                            </td>
                             <td class="p-3">{{ $category->room }}</td>
                             <td class="p-3">{{ $category->name }}</td>
                             <td class="p-3 flex justify-center gap-3">
@@ -74,11 +94,11 @@
                                 </a>
                             </td>
                         </tr>
-                        @php $noCategory++; @endphp
                     @endforeach
                 </tbody>
             </table>
         </div>
+
         <!-- Pagination -->
         <div class="mt-5 flex justify-center">
             {{ $categories->links('pagination::tailwind') }}
