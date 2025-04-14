@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ExportPDFController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -126,5 +127,9 @@ Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock
 
 Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])->name('export.products.pdf');
 
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
+Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
+
+Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
      

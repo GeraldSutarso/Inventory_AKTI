@@ -39,6 +39,9 @@
                 <div class="mt-3 flex gap-4">
                     <a href="{{ route('barang.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">+ Tambah Barang</a>
                     <a href="/excel/products" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">⬇ Export Excel</a>
+                    <button id="openOrderModal" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md">
+                        Order Stok
+                    </button>
                 </div>
             </div>
             <form method="GET" class="mb-4 flex flex-wrap gap-4">
@@ -189,10 +192,10 @@
                                     <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">⬇ Download QR</a>
                                     <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
                                         class="bg-purple-500 hover:bg-purple-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">📦 Update Stok</a>
-                                    <a href="{{ route('export.products.pdf', $product->id) }}" 
-                                        class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg shadow-md text-sm font-semibold">
-                                        ⬇ Form Order
-                                    </a>                                        
+                                    <a href="{{ route('orders.review', $product->id) }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                        Review Order
+                                    </a>      
+                                    <a href="{{ route('orders.previewPdf', $product->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Preview PDF</a>                           
                                 </div>
                             </td>
                         </tr>
@@ -205,6 +208,56 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div id="orderModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+        <h2 class="text-xl font-semibold text-center mb-4">Order Stok Barang</h2>
+        
+        <form action="{{ route('orders.store') }}" method="POST">
+            @csrf
+            <!-- Produk -->
+            <div class="mb-4">
+                <label for="product_id" class="block text-sm font-medium text-gray-700">Pilih Barang</label>
+                <select name="product_id" id="product_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    @foreach($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Jumlah -->
+            <div class="mb-4">
+                <label for="quantity" class="block text-sm font-medium text-gray-700">Jumlah yang Dipesan</label>
+                <input type="number" name="quantity" id="quantity" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" min="1" required>
+            </div>
+
+            <!-- Vendor TMMIN -->
+            <div class="mb-4">
+                <label for="vendor_tmmin" class="block text-sm font-medium text-gray-700">Vendor TMMIN</label>
+                <input type="text" name="vendor_tmmin" id="vendor_tmmin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Vendor AKTI -->
+            <div class="mb-4">
+                <label for="vendor_akti" class="block text-sm font-medium text-gray-700">Vendor AKTI</label>
+                <input type="text" name="vendor_akti" id="vendor_akti" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Keterangan -->
+            <div class="mb-4">
+                <label for="keterangan" class="block text-sm font-medium text-gray-700">Keterangan</label>
+                <textarea name="keterangan" id="keterangan" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md" id="closeModal">Batal</button>
+                <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 
 
@@ -280,4 +333,14 @@ document.querySelectorAll('.btn-delete-product').forEach(button => {
 
 
 </script>
+<script>
+    document.getElementById('openOrderModal').addEventListener('click', function () {
+        document.getElementById('orderModal').classList.remove('hidden');
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function () {
+        document.getElementById('orderModal').classList.add('hidden');
+    });
+</script>
+
 @endsection
