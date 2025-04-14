@@ -193,8 +193,8 @@
             <thead>
                 <tr>
                     <th style="width: 30%; text-align: center;">Sarpras</th>
-                    <th style="width: 30%; text-align: center;"></th>
-                    <th style="width: 30%; text-align: center;"></th>
+                    <th style="width: 30%; text-align: center;">{{ $order->kaunit->name ?? '-' }}</th>
+                    <th style="width: 30%; text-align: center;">{{ $order->user->name ?? '-' }}</th>
                 </tr>
             </thead>
         </table>

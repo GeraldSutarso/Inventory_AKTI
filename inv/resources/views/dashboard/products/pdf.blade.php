@@ -146,7 +146,7 @@
         <table style="width: 100%; table-layout: fixed; margin-top: 5px;">
             <thead>
                 <tr>
-                    <th style="width: 5%;">NO</th>
+                    <th style="width: 5%;">NO1</th>
                     <th style="width: 35%; text-align: left;">NAMA BARANG</th>
                     <th style="width: 10%;">QUALITY</th>
                     <th style="width: 10%;">Vendor TMMIN</th>

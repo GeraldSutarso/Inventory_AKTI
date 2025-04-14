@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
             $table->string('vendor_akti')->nullable();
             $table->text('keterangan')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('kaunit_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }

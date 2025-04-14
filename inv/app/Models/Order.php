@@ -16,6 +16,7 @@ class Order extends Model
         'vendor_akti',
         'keterangan',
         'user_id',
+        'kaunit_id',
     ];
 
     // Relasi ke Product (jika perlu)

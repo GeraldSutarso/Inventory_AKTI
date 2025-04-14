@@ -17,6 +17,7 @@ class OrderController extends Controller
             'vendor_tmmin' => 'nullable|string',
             'vendor_akti' => 'nullable|string',
             'keterangan' => 'nullable|string',
+            'kaunit_id' => 'required|exists:users,id',
         ]);
     
         $validated['user_id'] = auth()->id(); // Ambil user yang login

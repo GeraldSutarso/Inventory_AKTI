@@ -247,7 +247,17 @@
             <!-- Keterangan -->
             <div class="mb-4">
                 <label for="keterangan" class="block text-sm font-medium text-gray-700">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                <textarea name="note" id="keterangan" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+            </div>
+
+            <!-- Disetujui -->
+            <div class="mb-4">
+                <label for="kaunit_id" class="block text-sm font-medium text-gray-700">Disetujui</label>
+                <select name="kaunit_id" id="kaunit_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    @foreach(\App\Models\User::where('role', 'head')->get() as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="flex justify-end">
