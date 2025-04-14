@@ -195,7 +195,7 @@
                                     <a href="{{ route('orders.review', $product->id) }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                                         Review Order
                                     </a>      
-                                    <a href="{{ route('orders.previewPdf', $product->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Preview PDF</a>                           
+                                    <a href="{{ route('orders.previewPdf', $product->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Unduh Form Order</a>                           
                                 </div>
                             </td>
                         </tr>
