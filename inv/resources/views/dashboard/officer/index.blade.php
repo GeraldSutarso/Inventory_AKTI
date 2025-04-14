@@ -49,6 +49,15 @@
                                 <button data-id="{{ $officer->id }}" class="btn-delete-officer bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow transition">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
+                                <button 
+                                    data-id="{{ $officer->id }}" 
+                                    class="btn-upload-ttd bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded shadow transition"
+                                    data-name="{{ $officer->name }}"
+                                    data-toggle="modal" 
+                                    data-target="#modalUploadTTD"
+                                >
+                                    <i class="ri-sketching"></i>
+                                </button>
                             </td>
                         </tr>
                         @php $no++; @endphp
@@ -61,4 +70,53 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Upload TTD -->
+<div id="modalUploadTTD" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+        <h3 class="text-lg font-semibold mb-4">Upload Tanda Tangan <span id="officerName" class="font-bold"></span></h3>
+        <form id="formUploadTTD" action="/upload-ttd" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="officer_id" id="officerId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">File TTD (gambar):</label>
+                <input type="file" name="ttd" accept="image/*" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('modalUploadTTD');
+    const officerNameSpan = document.getElementById('officerName');
+    const officerIdInput = document.getElementById('officerId');
+
+    document.querySelectorAll('.btn-upload-ttd').forEach(button => {
+        button.addEventListener('click', function () {
+            const officerId = this.getAttribute('data-id');
+            const officerName = this.getAttribute('data-name');
+
+            officerIdInput.value = officerId;
+            officerNameSpan.textContent = officerName;
+            modal.classList.remove('hidden');
+        });
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    // Optional: Close modal on ESC
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
+</script>
+
+
 @endsection

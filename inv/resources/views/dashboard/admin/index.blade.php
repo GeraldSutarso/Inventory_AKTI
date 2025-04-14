@@ -53,6 +53,14 @@
                                 <button data-id="{{$admin->id}}" class="btn-delete-admin bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 transition">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
+                                <button 
+                                    data-id="{{ $admin->id }}" 
+                                    data-name="{{ $admin->name }}"
+                                    class="btn-ttd-admin bg-green-500 px-3 py-1 rounded text-white hover:bg-green-600 transition"
+                                    onclick="openTtdModal({{ $admin->id }}, '{{ $admin->name }}')"
+                                >
+                                    <i class="ri-sketching"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -68,5 +76,36 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Upload TTD -->
+<div id="modal-ttd" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 class="text-lg font-semibold mb-4">Upload Tanda Tangan</h2>
+        <form id="form-ttd" method="POST" action="/admin/upload-ttd" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="admin_id" id="admin-id">
+            <div class="mb-4">
+                <label for="ttd" class="block text-sm font-medium text-gray-700">Pilih Gambar TTD</label>
+                <input type="file" name="ttd" accept="image/*" required class="mt-1 block w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-blue-300">
+            </div>
+            <div class="flex justify-end">
+                <button type="button" onclick="closeTtdModal()" class="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openTtdModal(id, name) {
+        document.getElementById('admin-id').value = id;
+        document.getElementById('modal-ttd').classList.remove('hidden');
+    }
+
+    function closeTtdModal() {
+        document.getElementById('modal-ttd').classList.add('hidden');
+    }
+</script>
+
 
 @endsection

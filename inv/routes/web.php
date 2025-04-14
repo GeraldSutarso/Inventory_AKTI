@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/input-petugas', [UserController::class, 'storeOfficer'])->middleware('role:admin');
     Route::get('/ubah-petugas/{id}', [UserController::class, 'editOfficer'])->middleware('role:admin');
     Route::post('/ubah-petugas/{id}', [UserController::class, 'updateOfficer'])->middleware('role:admin');
+    Route::post('/admin/upload-ttd', [UserController::class, 'uploadTtd'])->name('admin.upload.ttd');
+
 
     Route::get('/input-admin', [UserController::class, 'createAdmin'])->middleware('role:admin');
     Route::post('/input-admin', [UserController::class, 'storeAdmin'])->middleware('role:admin');
@@ -132,4 +134,4 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
 
 Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
-     
+

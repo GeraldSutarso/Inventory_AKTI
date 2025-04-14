@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -254,6 +255,26 @@ class UserController extends Controller
             return redirect('/sarpras')->with('message', 'data berhasil diubah');
         }
     }
+
+    public function uploadTtd(Request $request)
+    {
+        $request->validate([
+            'admin_id' => 'required|exists:users,id',
+            'ttd' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = User::findOrFail($request->admin_id);
+
+        // Simpan gambar ke storage
+        $path = $request->file('ttd')->store('ttd_admins', 'public');
+
+        // Update kolom ttd di tabel users
+        $user->ttd = $path;
+        $user->save();
+
+        return redirect()->back()->with('message', 'TTD berhasil diupload.');
+    }
+
 
 
 }
