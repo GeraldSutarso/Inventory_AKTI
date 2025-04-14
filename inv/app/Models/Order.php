@@ -15,8 +15,8 @@ class Order extends Model
         'vendor_tmmin',
         'vendor_akti',
         'keterangan',
-        'user_id',
         'kaunit_id',
+        'user_id',
     ];
 
     // Relasi ke Product (jika perlu)
@@ -29,5 +29,10 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function kaunit()
+    {
+        return $this->belongsTo(User::class, 'kaunit_id');
     }
 }
