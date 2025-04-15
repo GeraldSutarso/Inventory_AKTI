@@ -247,6 +247,8 @@
             <li><a href="/supplies"><i class="ri-archive-line"></i>Riwayat Stok</a></li>
             <li><a href="/qr-scanner"><i class="ri-qr-code-line"></i>QR Scanner</a></li>
             <li><a href="/label"><i class="ri-bookmark-fill"></i>Label</a></li>
+            <li><a href="/orders/manage"><i class="ri-file-list-3-line"></i>Manajemen Order</a></li>
+
             @if(Auth::user()->role === 'admin')
             <li><a href="/sarpras"><i class="ri-user-line"></i>Data Petugas Sarpras</a></li>
             <li><a href="/kepala-unit"><i class="ri-user-line"></i>Data Kepala Unit</a></li>

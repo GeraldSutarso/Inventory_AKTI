@@ -12,7 +12,7 @@ use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ExportPDFController;
 use App\Http\Controllers\OrderController;
-
+use App\Http\Controllers\OrderManagementController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -131,3 +131,14 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
 Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
 Route::get('/orders/{order}/download-pdf', [OrderController::class, 'downloadPdf'])->name('orders.downloadPdf');
+
+Route::middleware(['auth'])->prefix('orders/manage')->name('orders.manage.')->group(function () {
+    Route::get('/', [OrderManagementController::class, 'index'])->name('index');
+    Route::get('{order}/edit', [OrderManagementController::class, 'edit'])->name('edit');
+    Route::put('{order}', [OrderManagementController::class, 'update'])->name('update');
+
+    Route::post('{order}/approve', [OrderManagementController::class, 'approve'])->name('approve');
+    Route::post('{order}/reject', [OrderManagementController::class, 'reject'])->name('reject');
+    Route::post('{order}/acknowledge', [OrderManagementController::class, 'acknowledge'])->name('acknowledge');
+});
+
