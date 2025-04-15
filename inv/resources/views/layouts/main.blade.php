@@ -221,6 +221,31 @@
             <i class="ri-menu-line text-2xl"></i>
         </button>
         <h2 class="text-lg font-semibold text-gray-700">Dashboard Inventory</h2>
+        <!-- Notification Bell -->
+        @if(in_array(Auth::user()->role, ['head', 'sarpras']))
+            <div class="relative mr-4">
+                <button onclick="document.getElementById('notifModal').classList.remove('hidden')" class="relative">
+                    <i class="ri-notification-3-fill text-2xl text-gray-600"></i>
+                    @if($unreadCount > 0)
+                        <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1">
+                            {{ $unreadCount }}
+                        </span>
+                    @endif
+                </button>
+            </div>
+        @endif
+
+        <div class="relative mr-4">
+            <button id="notificationButton" class="text-gray-600 relative">
+                <i class="ri-notification-3-line text-2xl"></i>
+                @if($unreadCount > 0)
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    {{ $unreadCount }}
+                </span>
+                @endif
+            </button>
+        </div>
+
         <div class="flex items-center">
             <p class="text-sm text-gray-600 mr-2">{{ Auth::user()->name }}</p>
             <img 
