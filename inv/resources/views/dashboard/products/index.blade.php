@@ -186,18 +186,39 @@
                                 @endif
                             </td>
                             <td class="p-2 md:p-3 border border-gray-300 text-center">
-                                <div class="flex flex-wrap gap-1 md:gap-2 justify-center">
-                                    <a href="{{ route('barang.edit', $product->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">✏ Edit</a>
-                                    <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 hover:bg-red-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">🗑 Hapus</button>
-                                    <a href="{{ route('products.qr.download', $product->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">⬇ Download QR</a>
-                                    <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}" 
-                                        class="bg-purple-500 hover:bg-purple-600 text-white py-1 px-2 md:py-2 md:px-3 rounded-md text-xs md:text-sm shadow-md font-semibold">📦 Update Stok</a>
-                                    <a href="{{ route('orders.review', $product->id) }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                                        Review Order
-                                    </a>      
-                                    <a href="{{ route('orders.previewPdf', $product->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md">Form Order</a>                           
+                                <div class="flex flex-wrap justify-center gap-2">
+                                    <a href="{{ route('barang.edit', $product->id) }}"
+                                       class="inline-flex items-center gap-1 bg-yellow-400 hover:bg-yellow-500 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        ✏️ Edit
+                                    </a>
+                            
+                                    <button data-id="{{ $product->id }}"
+                                            class="btn-delete-product inline-flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        🗑️ Hapus
+                                    </button>
+                            
+                                    <a href="{{ route('products.qr.download', $product->id) }}"
+                                       class="inline-flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        ⬇️ QR
+                                    </a>
+                            
+                                    <a href="{{ route('supplies.create') }}?redirect_to={{ url()->full() }}"
+                                       class="inline-flex items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        📦 Stok
+                                    </a>
+                            
+                                    <a href="{{ route('orders.review', $product->id) }}"
+                                       class="inline-flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        ✅ Review
+                                    </a>
+                            
+                                    <a href="{{ route('orders.previewPdf', $product->id) }}"
+                                       class="inline-flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                                        📄 PDF Order
+                                    </a>
                                 </div>
                             </td>
+                            
                         </tr>
                     @endforeach
                 </tbody>
