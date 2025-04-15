@@ -17,18 +17,14 @@ use App\Http\Controllers\OrderController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
-
 Route::middleware('auth')->group(function () {
-    
+
+    // Dashboard
     Route::get('/', [OverviewController::class, 'index']);
-    // Replace existing product routes with:
+
+    // Barang (Products)
     Route::prefix('barang')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('barang.index');
         Route::get('/create', [ProductController::class, 'create'])->name('barang.create');
@@ -38,100 +34,95 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{product}', [ProductController::class, 'delete'])->name('barang.delete');
     });
 
-    // Keep these additional routes
     Route::get('/products', [ProductController::class, 'getAllProducts']);
     Route::get('/excel/products', [ProductController::class, 'exportExcel']);
     Route::get('/generate-qr/{product}', [ProductController::class, 'generateQR'])->name('products.qr');
     Route::get('/hasil/{product}', [ProductController::class, 'showHasil'])->name('hasil.show');
     Route::get('/download-qr/{product}', [ProductController::class, 'downloadQR'])->name('products.qr.download');
 
-
-    Route::get('/supplier', [SupplierController::class,'index']);
-    Route::delete('/hapus-supplier/{id}', [SupplierController::class, 'delete']);
+    // Supplier
+    Route::get('/supplier', [SupplierController::class, 'index']);
     Route::get('/input-supplier', [SupplierController::class, 'create']);
     Route::post('/input-supplier', [SupplierController::class, 'store']);
     Route::get('/ubah-supplier/{id}', [SupplierController::class, 'edit']);
     Route::post('/ubah-supplier/{id}', [SupplierController::class, 'update']);
-    Route::get('/suppliers',[SupplierController::class,'getAllSuppliers']);
-    Route::get('/excel/suppliers',[SupplierController::class,'exportExcel']);
+    Route::delete('/hapus-supplier/{id}', [SupplierController::class, 'delete']);
+    Route::get('/suppliers', [SupplierController::class, 'getAllSuppliers']);
+    Route::get('/excel/suppliers', [SupplierController::class, 'exportExcel']);
 
+    // Kategori
     Route::get('/kategori', [CategoryController::class, 'index']);
     Route::get('/input-kategori', [CategoryController::class, 'create']);
     Route::post('/input-kategori', [CategoryController::class, 'store']);
-    Route::delete('/hapus-kategori/{id}', [CategoryController::class, 'delete']);
     Route::get('/ubah-kategori/{id}', [CategoryController::class, 'edit']);
     Route::post('/ubah-kategori/{id}', [CategoryController::class, 'update']);
-    Route::get('/excel/kategori',[CategoryController::class,'exportExcel']);
+    Route::delete('/hapus-kategori/{id}', [CategoryController::class, 'delete']);
+    Route::get('/excel/kategori', [CategoryController::class, 'exportExcel']);
 
-    Route::get('/admin', [UserController::class, 'admin'])->middleware('role:admin');
-    Route::get('/petugas', [UserController::class, 'officer'])->middleware('role:admin');
-    Route::delete('/hapus-petugas/{id}', [UserController::class, 'delete'])->middleware('role:admin');
-    Route::get('/input-petugas', [UserController::class, 'createOfficer'])->middleware('role:admin');
-    Route::post('/input-petugas', [UserController::class, 'storeOfficer'])->middleware('role:admin');
-    Route::get('/ubah-petugas/{id}', [UserController::class, 'editOfficer'])->middleware('role:admin');
-    Route::post('/ubah-petugas/{id}', [UserController::class, 'updateOfficer'])->middleware('role:admin');
-    Route::post('/admin/upload-ttd', [UserController::class, 'uploadTtd'])->name('admin.upload.ttd');
+    // Admin & Petugas
+    Route::middleware('role:admin')->group(function () {
+        // Admin
+        Route::get('/admin', [UserController::class, 'admin']);
+        Route::get('/input-admin', [UserController::class, 'createAdmin']);
+        Route::post('/input-admin', [UserController::class, 'storeAdmin']);
+        Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin']);
+        Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin']);
+        Route::delete('/hapus-admin/{id}', [UserController::class, 'delete']);
 
+        // Petugas
+        Route::get('/petugas', [UserController::class, 'officer']);
+        Route::get('/input-petugas', [UserController::class, 'createOfficer']);
+        Route::post('/input-petugas', [UserController::class, 'storeOfficer']);
+        Route::get('/ubah-petugas/{id}', [UserController::class, 'editOfficer']);
+        Route::post('/ubah-petugas/{id}', [UserController::class, 'updateOfficer']);
+        Route::delete('/hapus-petugas/{id}', [UserController::class, 'delete']);
 
-    Route::get('/input-admin', [UserController::class, 'createAdmin'])->middleware('role:admin');
-    Route::post('/input-admin', [UserController::class, 'storeAdmin'])->middleware('role:admin');
-    Route::delete('/hapus-admin/{id}', [UserController::class, 'delete'])->middleware('role:admin');
-    Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin'])->middleware('role:admin');
-    Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin'])->middleware('role:admin');
+        // Upload TTD
+        Route::post('/admin/upload-ttd', [UserController::class, 'uploadTtd'])->name('admin.upload.ttd');
 
-    // Head (Kepala Unit)
+        // Kepala Unit
+        Route::get('/input-kepala', [UserController::class, 'createHead']);
+        Route::post('/input-kepala', [UserController::class, 'storeHead']);
+        Route::get('/ubah-kepala/{id}', [UserController::class, 'editHead']);
+        Route::post('/ubah-kepala/{id}', [UserController::class, 'updateHead']);
+        Route::delete('/hapus-kepala/{id}', [UserController::class, 'delete']);
+
+        // Sarpras
+        Route::get('/input-sarpras', [UserController::class, 'createSarpras']);
+        Route::post('/input-sarpras', [UserController::class, 'storeSarpras']);
+        Route::get('/ubah-sarpras/{id}', [UserController::class, 'editSarpras']);
+        Route::post('/ubah-sarpras/{id}', [UserController::class, 'updateSarpras']);
+        Route::delete('/hapus-sarpras/{id}', [UserController::class, 'deleteSarpras']);
+    });
+
+    // Kepala Unit dan Sarpras (Non-admin)
     Route::get('/kepala-unit', [UserController::class, 'head']);
-    Route::get('/input-kepala', [UserController::class, 'createHead'])->middleware('role:admin');
-    Route::post('/input-kepala', [UserController::class, 'storeHead'])->middleware('role:admin');
-    Route::get('/ubah-kepala/{id}', [UserController::class, 'editHead'])->middleware('role:admin');
-    Route::post('/ubah-kepala/{id}', [UserController::class, 'updateHead'])->middleware('role:admin');
-    Route::delete('/hapus-kepala/{id}', [UserController::class, 'delete'])->middleware('role:admin');
-
-    // Sarpras
     Route::get('/sarpras', [UserController::class, 'sarpras']);
-    Route::get('/input-sarpras', [UserController::class, 'createSarpras'])->middleware('role:admin');
-    Route::post('/input-sarpras', [UserController::class, 'storeSarpras'])->middleware('role:admin');
-    Route::get('/ubah-sarpras/{id}', [UserController::class, 'editSarpras'])->middleware('role:admin');
-    Route::post('/ubah-sarpras/{id}', [UserController::class, 'updateSarpras'])->middleware('role:admin');
-    Route::delete('/hapus-sarpras/{id}', [UserController::class, 'deleteSarpras'])->middleware('role:admin');
 
-
+    // Supplies
     Route::resource('supplies', ProductSuppliesController::class)
-    ->except(['show'])
-    ->parameters(['supplies' => 'supply']);
+        ->except(['show'])
+        ->parameters(['supplies' => 'supply']);
 
-    // Route::get('/barang-masuk', [ProductSuppliesController::class, 'indexIncome']);
-    // Route::get('/input-barang-masuk', [ProductSuppliesController::class, 'createIncome']);
-    // Route::get('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'editIncome']);
-    // Route::post('/ubah-barang-masuk/{id}', [ProductSuppliesController::class, 'updateIncome']);
-    // Route::post('/input-barang-masuk', [ProductSuppliesController::class, 'storeIncome']);
-    // Route::delete('/hapus-barang-masuk/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
-
-    // Route::get('/barang-keluar', [ProductSuppliesController::class, 'indexOutcome']);
-    // Route::get('/input-barang-keluar', [ProductSuppliesController::class, 'createOutcome']);
-    // Route::post('/input-barang-keluar', [ProductSuppliesController::class, 'storeOutcome']);
-    // Route::delete('/hapus-barang-keluar/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
-    // Route::get('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'editOutcome']);
-    // Route::post('/ubah-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome']);
-
-    Route::get('/logout',[AuthController::class, 'logout']);
+    // Logout
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware('guest')->group(function() {
+// Guest (Login)
+Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
+// QR & Label
 Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
 Route::get('/label', [LabelController::class, 'index'])->name('label.index');
 
+// Produk Update & Export
 Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
-
 Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])->name('export.products.pdf');
 
+// Orders
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-
 Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
-
 Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
-
