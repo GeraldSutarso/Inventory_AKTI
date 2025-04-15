@@ -53,6 +53,13 @@
                                 <button data-id="{{ $item->id }}" class="btn-delete-sarpras bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 transition">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
+                                <button 
+                                    class="btn-upload-ttd-sarpras bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded shadow transition"
+                                    data-id="{{ $item->id }}"
+                                    data-name="{{ $item->name }}"
+                                >
+                                    <i class="ri-sketching"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -67,5 +74,54 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Upload TTD Sarpras -->
+<div id="modalUploadTTDSarpras" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+        <h3 class="text-lg font-semibold mb-4">
+            Upload Tanda Tangan <span id="sarprasName" class="font-bold"></span>
+        </h3>
+        <form id="formUploadTTDSarpras" action="{{ route('sarpras.upload.ttd') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="sarpras_id" id="sarprasId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">File TTD (gambar):</label>
+                <input type="file" name="ttd" accept="image/*" class="w-full border px-3 py-2 rounded" required>
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeModalTTDSarpras()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modalTTD = document.getElementById('modalUploadTTDSarpras');
+    const sarprasNameSpan = document.getElementById('sarprasName');
+    const sarprasIdInput = document.getElementById('sarprasId');
+
+    document.querySelectorAll('.btn-upload-ttd-sarpras').forEach(button => {
+        button.addEventListener('click', function () {
+            const sarprasId = this.getAttribute('data-id');
+            const sarprasName = this.getAttribute('data-name');
+
+            sarprasIdInput.value = sarprasId;
+            sarprasNameSpan.textContent = sarprasName;
+            modalTTD.classList.remove('hidden');
+        });
+    });
+
+    function closeModalTTDSarpras() {
+        modalTTD.classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "Escape") {
+            closeModalTTDSarpras();
+        }
+    });
+</script>
+
 
 @endsection

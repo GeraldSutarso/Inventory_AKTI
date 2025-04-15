@@ -78,7 +78,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/hapus-petugas/{id}', [UserController::class, 'delete']);
 
         // Upload TTD
-        Route::post('/admin/upload-ttd', [UserController::class, 'uploadTtd'])->name('admin.upload.ttd');
+        Route::post('/admin/upload-ttd', [UserController::class, 'uploadTtdAdmin'])->name('admin.upload.ttd');
+        Route::post('/upload-ttd', [UserController::class, 'uploadTtdOfficer'])->name('officer.upload.ttd');
+        Route::post('/upload-ttd-sarpras', [UserController::class, 'uploadTtdSarpras'])->name('sarpras.upload.ttd');
+        Route::post('/upload-ttd-kepala', [UserController::class, 'uploadTtdKepala'])->name('kepala.upload.ttd');
+
 
         // Kepala Unit
         Route::get('/input-kepala', [UserController::class, 'createHead']);

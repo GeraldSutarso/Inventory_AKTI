@@ -256,7 +256,7 @@ class UserController extends Controller
         }
     }
 
-    public function uploadTtd(Request $request)
+    public function uploadTtdAdmin(Request $request)
     {
         $request->validate([
             'admin_id' => 'required|exists:users,id',
@@ -273,6 +273,70 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->back()->with('message', 'TTD berhasil diupload.');
+    }
+
+    public function uploadTtdOfficer(Request $request)
+    {
+        $request->validate([
+            'officer_id' => 'required|exists:users,id',
+            'ttd' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = User::findOrFail($request->officer_id);
+
+        // Simpan gambar ke storage/app/public/ttd_officers
+        $path = $request->file('ttd')->store('ttd_officers', 'public');
+
+        // Update kolom 'ttd' pada tabel users
+        $user->ttd = $path;
+        $user->save();
+
+        return redirect()->back()->with('message', 'Tanda tangan berhasil diupload.');
+    }
+
+    public function uploadTtdSarpras(Request $request)
+    {
+        $request->validate([
+            'sarpras_id' => 'required|exists:users,id',
+            'ttd' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        $user = User::findOrFail($request->sarpras_id);
+
+        // Hapus TTD lama jika ada
+        if ($user->ttd) {
+            Storage::delete($user->ttd);
+        }
+
+        // Simpan TTD baru
+        $path = $request->file('ttd')->store('ttd_sarpras');
+
+        // Update kolom TTD di database
+        $user->ttd = $path;
+        $user->save();
+
+        return redirect()->back()->with('message', 'Tanda tangan berhasil diupload.');
+    }
+
+    public function uploadTtdKepala(Request $request)
+    {
+        $request->validate([
+            'kepala_id' => 'required|exists:users,id',
+            'ttd' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        $user = User::findOrFail($request->kepala_id);
+
+        // Hapus TTD lama jika ada
+        if ($user->ttd) {
+            Storage::delete($user->ttd);
+        }
+
+        $path = $request->file('ttd')->store('ttd_kepala');
+        $user->ttd = $path;
+        $user->save();
+
+        return redirect()->back()->with('message', 'TTD Kepala berhasil diupload.');
     }
 
 

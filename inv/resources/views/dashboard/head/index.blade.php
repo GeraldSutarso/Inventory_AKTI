@@ -53,6 +53,13 @@
                                 <button data-id="{{$head->id}}" class="btn-delete-admin bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 transition">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
+                                <button
+                                    data-id="{{ $head->id }}"
+                                    data-name="{{ $head->name }}"
+                                    class="btn-upload-ttd bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded shadow transition"
+                                >
+                                    <i class="ri-sketching"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -67,5 +74,45 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Upload TTD Kepala -->
+<div id="modalUploadTTD" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden justify-center items-center">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
+        <h2 class="text-lg font-semibold mb-4 text-gray-700">Upload TTD Kepala Unit</h2>
+        <form method="POST" action="{{ route('kepala.upload.ttd') }}" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="kepala_id" id="kepalaIdInput">
+            <div class="mb-4">
+                <label for="ttd" class="block text-sm font-medium text-gray-600">Upload TTD (PNG/JPG)</label>
+                <input type="file" name="ttd" accept="image/*" class="mt-1 block w-full border rounded p-2">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" id="closeModalTTD" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Batal</button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modalUploadTTD = document.getElementById('modalUploadTTD');
+    const btnUploadTTD = document.querySelectorAll('.btn-upload-ttd');
+    const closeModalTTD = document.getElementById('closeModalTTD');
+    const kepalaIdInput = document.getElementById('kepalaIdInput');
+
+    btnUploadTTD.forEach(btn => {
+        btn.addEventListener('click', function () {
+            const kepalaId = this.getAttribute('data-id');
+            kepalaIdInput.value = kepalaId;
+            modalUploadTTD.classList.remove('hidden');
+            modalUploadTTD.classList.add('flex');
+        });
+    });
+
+    closeModalTTD.addEventListener('click', function () {
+        modalUploadTTD.classList.remove('flex');
+        modalUploadTTD.classList.add('hidden');
+    });
+</script>
 
 @endsection
