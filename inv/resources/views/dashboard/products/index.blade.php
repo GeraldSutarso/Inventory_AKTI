@@ -209,13 +209,13 @@
                             
                                     <a href="{{ route('orders.review', $product->id) }}"
                                        class="inline-flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
-                                        ✅ Review
+                                        ✅ Review Order
                                     </a>
                             
-                                    <a href="{{ route('orders.previewPdf', $product->id) }}"
+                                    {{-- <a href="{{ route('orders.previewPdf', $product->id) }}"
                                        class="inline-flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
                                         📄 PDF Order
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </td>
                             

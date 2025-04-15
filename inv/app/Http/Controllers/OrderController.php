@@ -48,4 +48,18 @@ class OrderController extends Controller
         // Menyajikan PDF untuk di-download atau dilihat di browser
         return $pdf->stream('order_preview.pdf');
     }
+
+    public function downloadPdf(Order $order)
+    {
+        $data = [
+            'order' => $order,
+            'product' => $order->product, // Asumsi ada relasi product
+            'orders' => collect([$order]), // Membuat collection dengan 1 order untuk kompatibilitas dengan loop
+            'date' => now()->format('d F Y'),
+        ];
+    
+        $pdf = PDF\Pdf::loadView('orders.pdf', $data);
+        return $pdf->download('order-'.$order->id.'.pdf');
+    }
+    
 }

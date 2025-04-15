@@ -130,3 +130,4 @@ Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])
 Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
 Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
+Route::get('/orders/{order}/download-pdf', [OrderController::class, 'downloadPdf'])->name('orders.downloadPdf');
