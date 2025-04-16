@@ -97,7 +97,7 @@
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-gray-700 border border-gray-300 rounded-lg shadow-md">
-                <thead class="bg-gray-200 text-black">
+                <thead class="bg-gray-200">
                     <tr>
                         <th class="p-2 border text-center">No</th>
                 
