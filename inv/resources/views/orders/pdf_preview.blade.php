@@ -185,9 +185,26 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 40px;"></td>
-                    <td></td>
-                    <td></td>
+                    <!-- TTD SARPRAS -->
+                    <td style="height: 40px; text-align: center; vertical-align: bottom;"></td>
+
+                    <!-- TTD KAUNIT -->
+                    <td style="text-align: center; vertical-align: bottom;">
+                        @if($order->kaunit->ttd)
+                            <img src="{{ storage_path('app/public/' . $order->kaunit->ttd) }}" style="max-height: 40px;">
+                        @else
+                            <div style="height: 60px;"></div>
+                        @endif
+                    </td>
+
+                    <!-- TTD PEMOHON -->
+                    <td style="text-align: center; vertical-align: bottom;">
+                        @if($order->user->ttd)
+                            <img src="{{ storage_path('app/public/' . $order->user->ttd) }}" style="max-height: 40px;">
+                        @else
+                            <div style="height: 60px;"></div>
+                        @endif
+                    </td>
                 </tr>
             </tbody>
             <thead>
