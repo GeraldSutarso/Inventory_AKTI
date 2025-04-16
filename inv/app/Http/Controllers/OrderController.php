@@ -50,17 +50,24 @@ class OrderController extends Controller
 
     public function downloadPdf(Order $order)
     {
+        $productName = preg_replace('/[^A-Za-z0-9_\-]/', '', $order->product->name); // sanitize nama barang
+        $userName = preg_replace('/[^A-Za-z0-9_\-]/', '', $order->user->name); // sanitize nama user
+        $tanggal = now()->format('d-m-Y');
+    
+        $fileName = "Order_{$productName}_{$userName}_{$tanggal}.pdf";
+    
         $data = [
             'order' => $order,
             'product' => $order->product,
-            'orders' => collect([$order]), // ensure compatibility with looped view
+            'orders' => collect([$order]),
             'date' => now()->format('d F Y'),
             'sarprasUser' => User::where('role', 'sarpras')->first(),
         ];
-
+    
         $pdf = PDF\Pdf::loadView('orders.pdf', $data);
-        return $pdf->download('order-' . $order->id . '.pdf');
+        return $pdf->download($fileName);
     }
+    
 
     public function approve(Order $order)
     {
