@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    a:visited {
+        color: inherit; /* or any other color you want */
+    }
+}
