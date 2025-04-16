@@ -12,14 +12,18 @@
     <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="flex flex-wrap justify-between items-center mb-4">
             <div>
-                <h2 class="text-xl font-bold text-gray-700">Data Lokasi</h2>
-                <div class="mt-2 flex gap-2">
-                    <a href="/input-kategori" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">Tambah Lokasi</a>
-                    <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">Export Excel</a>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-700">Data Lokasi</h2>
+                <div class="mt-2 flex gap-2 flex-wrap">
+                    <a href="/input-kategori" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+                        Tambah Lokasi
+                    </a>
+                    <a href="/excel/kategori" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition">
+                        Export Excel
+                    </a>
                 </div>
             </div>
 
-            <form method="get" action="/kategori" class="flex gap-2 items-center flex-wrap">
+            <form method="get" action="/kategori" class="flex gap-2 items-center flex-wrap mt-2 sm:mt-0">
                 <!-- Room Filter -->
                 <select name="room" class="border rounded px-3 py-2 text-sm text-gray-600">
                     <option value="">Semua Ruangan</option>
@@ -60,8 +64,6 @@
                         <th class="p-3 text-center">Aksi</th>
                     </tr>
                 </thead>
-                
-
 
                 <tbody>
                     @foreach ($categories as $category)
