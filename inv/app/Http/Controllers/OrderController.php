@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -37,15 +38,13 @@ class OrderController extends Controller
         return view('orders.review', compact('product', 'orders'));
     }
 
-    public function previewPdf($productId)
+        public function previewPdf($productId)
     {
-        $product = Product::findOrFail($productId);  // Mendapatkan data produk
-        $orders = Order::where('product_id', $productId)->get();  // Mendapatkan semua order untuk produk tersebut
-    
-        // Mengonversi tampilan ke PDF
-        $pdf = PDF\Pdf::loadView('orders.pdf_preview', compact('product', 'orders'));
-    
-        // Menyajikan PDF untuk di-download atau dilihat di browser
+        $product = Product::findOrFail($productId);
+        $orders = Order::where('product_id', $productId)->get();
+        $sarprasUser = User::where('role', 'sarpras')->first();
+
+        $pdf = PDF\Pdf::loadView('orders.pdf_preview', compact('product', 'orders', 'sarprasUser'));
         return $pdf->stream('order_preview.pdf');
     }
 
@@ -53,32 +52,44 @@ class OrderController extends Controller
     {
         $data = [
             'order' => $order,
-            'product' => $order->product, // Asumsi ada relasi product
-            'orders' => collect([$order]), // Membuat collection dengan 1 order untuk kompatibilitas dengan loop
+            'product' => $order->product,
+            'orders' => collect([$order]), // ensure compatibility with looped view
             'date' => now()->format('d F Y'),
+            'sarprasUser' => User::where('role', 'sarpras')->first(),
         ];
-    
+
         $pdf = PDF\Pdf::loadView('orders.pdf', $data);
-        return $pdf->download('order-'.$order->id.'.pdf');
+        return $pdf->download('order-' . $order->id . '.pdf');
     }
 
     public function approve(Order $order)
-{
-    $order->update(['is_approved' => true, 'is_rejected' => false]);
-    return back()->with('success', 'Order approved.');
-}
+    {
+        $order->update([
+            'is_approved' => true,
+            'is_rejected' => false,
+        ]);
 
-public function reject(Order $order)
-{
-    $order->update(['is_approved' => false, 'is_rejected' => true]);
-    return back()->with('success', 'Order rejected.');
-}
+        return back()->with('success', 'Order approved.');
+    }
 
-public function acknowledge(Order $order)
-{
-    $order->update(['is_acknowledged' => true]);
-    return back()->with('success', 'Order acknowledged.');
-}
+    public function reject(Order $order)
+    {
+        $order->update([
+            'is_approved' => false,
+            'is_rejected' => true,
+        ]);
+
+        return back()->with('success', 'Order rejected.');
+    }
+
+    public function acknowledge(Order $order)
+    {
+        $order->update([
+            'is_acknowledged' => true,
+        ]);
+
+        return back()->with('success', 'Order acknowledged.');
+    }
 
     
 }

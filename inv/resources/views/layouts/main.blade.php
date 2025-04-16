@@ -225,7 +225,10 @@
         <div class="flex items-center space-x-4">
             @if(in_array(Auth::user()->role, ['head', 'sarpras']))
                 <div class="relative">
-                    <button onclick="document.getElementById('notifModal').classList.remove('hidden')" class="relative text-gray-600">
+                    <button 
+                        onclick="openNotifModal(event)" 
+                        class="relative text-gray-600"
+                    >
                         <i class="ri-notification-3-fill text-2xl"></i>
                         @if($unreadCount > 0)
                             <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1">
@@ -233,6 +236,7 @@
                             </span>
                         @endif
                     </button>
+
                 </div>
             @endif
         
@@ -303,7 +307,28 @@
             @endforelse
         </div>
     </div>
-
+    <script>
+        const modal = document.getElementById('notifModal');
+        const modalContent = modal.querySelector('.bg-white');
+    
+        function openNotifModal(event) {
+            event.stopPropagation(); // prevent closing instantly
+            modal.classList.remove('hidden');
+        }
+    
+        // Close when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!modal.classList.contains('hidden') && !modalContent.contains(event.target)) {
+                modal.classList.add('hidden');
+            }
+        });
+    
+        // Prevent clicks inside the modal from closing it
+        modalContent.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    </script>
+    
 
     <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
