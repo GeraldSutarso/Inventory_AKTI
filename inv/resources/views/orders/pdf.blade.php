@@ -188,9 +188,9 @@
                     <!-- TTD SARPRAS -->
                     <td style="text-align: center; vertical-align: bottom;">
                         @if($order->is_acknowledged && $sarprasUser && $sarprasUser->ttd)
-                            <img src="{{ storage_path('app/public/' . $sarprasUser->ttd) }}" style="max-height: 40px;">
+                            <img src="{{ storage_path('app/public/' . $sarprasUser->ttd) }}" style="max-height: 38px;">
                         @else
-                            <div style="height: 60px;"></div>
+                            <div style="height: 40px;"></div>
                         @endif
                     </td>
                     <!-- TTD KAUNIT -->
@@ -198,16 +198,16 @@
                         @if($order->is_approved && $order->kaunit && $order->kaunit->ttd)
                             <img src="{{ storage_path('app/public/' . $order->kaunit->ttd) }}" style="max-height: 38px;">
                         @else
-                            <div style="height: 50px;"></div>
+                            <div style="height: 40px;"></div>
                         @endif
                     </td>
 
                     <!-- TTD PEMOHON -->
                     <td style="text-align: center; vertical-align: bottom;">
                         @if($order->user->ttd)
-                            <img src="{{ storage_path('app/public/' . $order->user->ttd) }}" style="max-height: 40px;">
+                            <img src="{{ storage_path('app/public/' . $order->user->ttd) }}" style="max-height: 38px;">
                         @else
-                            <div style="height: 60px;"></div>
+                            <div style="height: 40px;"></div>
                         @endif
                     </td>
                 </tr>
