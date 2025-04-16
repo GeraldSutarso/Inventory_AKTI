@@ -186,23 +186,29 @@
             <tbody>
                 <tr>
                     <!-- TTD SARPRAS -->
-                    <td style="height: 40px; text-align: center; vertical-align: bottom;"></td>
+                    <td style="text-align: center; vertical-align: bottom;">
+                        @if($order->is_acknowledged && $order->sarpras && $order->sarpras->ttd)
+                            <img src="{{ storage_path('app/public/' . $order->sarpras->ttd) }}" style="max-height: 38px;">
+                        @else
+                            <div style="height: 50px;"></div>
+                        @endif
+                    </td>
 
                     <!-- TTD KAUNIT -->
                     <td style="text-align: center; vertical-align: bottom;">
-                        @if($order->kaunit->ttd)
-                            <img src="{{ storage_path('app/public/' . $order->kaunit->ttd) }}" style="max-height: 40px;">
+                        @if($order->is_approved && $order->kaunit && $order->kaunit->ttd)
+                            <img src="{{ storage_path('app/public/' . $order->kaunit->ttd) }}" style="max-height: 38px;">
                         @else
-                            <div style="height: 60px;"></div>
+                            <div style="height: 50px;"></div>
                         @endif
                     </td>
 
                     <!-- TTD PEMOHON -->
                     <td style="text-align: center; vertical-align: bottom;">
                         @if($order->user->ttd)
-                            <img src="{{ storage_path('app/public/' . $order->user->ttd) }}" style="max-height: 40px;">
+                            <img src="{{ storage_path('app/public/' . $order->user->ttd) }}" style="max-height: 38px;">
                         @else
-                            <div style="height: 60px;"></div>
+                            <div style="height: 50px;"></div>
                         @endif
                     </td>
                 </tr>
