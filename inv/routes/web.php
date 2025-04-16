@@ -110,6 +110,25 @@ Route::middleware('auth')->group(function () {
 
     // Logout
     Route::get('/logout', [AuthController::class, 'logout']);
+    // QR & Label
+    Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
+    Route::get('/label', [LabelController::class, 'index'])->name('label.index');
+
+    // Produk Update & Export
+    Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
+    Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])->name('export.products.pdf');
+
+    // Orders
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
+    Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
+    Route::get('/orders/{order}/download-pdf', [OrderController::class, 'downloadPdf'])->name('orders.downloadPdf');
+
+    Route::post('/orders/{order}/approve', [OrderController::class, 'approve'])->name('orders.approve');
+    Route::post('/orders/{order}/reject', [OrderController::class, 'reject'])->name('orders.reject');
+    Route::post('/orders/{order}/acknowledge', [OrderController::class, 'acknowledge'])->name('orders.acknowledge');
+
+
 });
 
 // Guest (Login)
@@ -118,19 +137,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-// QR & Label
-Route::get('/qr-scanner', [QRScannerController::class, 'index'])->name('qr-scanner');
-Route::get('/label', [LabelController::class, 'index'])->name('label.index');
 
-// Produk Update & Export
-Route::put('/product/update-stock/{id}', [ProductController::class, 'updateStock'])->name('updateStock');
-Route::get('/export/products/pdf/{id}', [ProductController::class, 'exportPdf'])->name('export.products.pdf');
-
-// Orders
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-Route::get('/orders/review/{product}', [OrderController::class, 'review'])->name('orders.review');
-Route::get('/orders/preview/{productId}', [OrderController::class, 'previewPdf'])->name('orders.previewPdf');
-Route::get('/orders/{order}/download-pdf', [OrderController::class, 'downloadPdf'])->name('orders.downloadPdf');
 
 Route::middleware(['auth'])->prefix('orders/manage')->name('orders.manage.')->group(function () {
     Route::get('/', [OrderManagementController::class, 'index'])->name('index');
@@ -141,4 +148,3 @@ Route::middleware(['auth'])->prefix('orders/manage')->name('orders.manage.')->gr
     Route::post('{order}/reject', [OrderManagementController::class, 'reject'])->name('reject');
     Route::post('{order}/acknowledge', [OrderManagementController::class, 'acknowledge'])->name('acknowledge');
 });
-

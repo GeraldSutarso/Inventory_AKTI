@@ -61,5 +61,24 @@ class OrderController extends Controller
         $pdf = PDF\Pdf::loadView('orders.pdf', $data);
         return $pdf->download('order-'.$order->id.'.pdf');
     }
+
+    public function approve(Order $order)
+{
+    $order->update(['is_approved' => true, 'is_rejected' => false]);
+    return back()->with('success', 'Order approved.');
+}
+
+public function reject(Order $order)
+{
+    $order->update(['is_approved' => false, 'is_rejected' => true]);
+    return back()->with('success', 'Order rejected.');
+}
+
+public function acknowledge(Order $order)
+{
+    $order->update(['is_acknowledged' => true]);
+    return back()->with('success', 'Order acknowledged.');
+}
+
     
 }

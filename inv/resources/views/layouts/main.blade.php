@@ -222,39 +222,88 @@
         </button>
         <h2 class="text-lg font-semibold text-gray-700">Dashboard Inventory</h2>
         <!-- Notification Bell -->
-        @if(in_array(Auth::user()->role, ['head', 'sarpras']))
-            <div class="relative mr-4">
-                <button onclick="document.getElementById('notifModal').classList.remove('hidden')" class="relative">
-                    <i class="ri-notification-3-fill text-2xl text-gray-600"></i>
-                    @if($unreadCount > 0)
-                        <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1">
-                            {{ $unreadCount }}
-                        </span>
-                    @endif
-                </button>
-            </div>
-        @endif
-
-        <div class="relative mr-4">
-            <button id="notificationButton" class="text-gray-600 relative">
-                <i class="ri-notification-3-line text-2xl"></i>
-                @if($unreadCount > 0)
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                    {{ $unreadCount }}
-                </span>
-                @endif
-            </button>
-        </div>
-
-        <div class="flex items-center">
-            <p class="text-sm text-gray-600 mr-2">{{ Auth::user()->name }}</p>
+        <div class="flex items-center space-x-4">
+            @if(in_array(Auth::user()->role, ['head', 'sarpras']))
+                <div class="relative">
+                    <button onclick="document.getElementById('notifModal').classList.remove('hidden')" class="relative text-gray-600">
+                        <i class="ri-notification-3-fill text-2xl"></i>
+                        @if($unreadCount > 0)
+                            <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
+                    </button>
+                </div>
+            @endif
+        
+            <p class="text-sm text-gray-600">{{ Auth::user()->name }}</p>
             <img 
                 src="{{ Auth::user()->role == 'admin' ? 'https://static.vecteezy.com/system/resources/previews/020/429/953/original/admin-icon-vector.jpg' : 'https://th.bing.com/th/id/OIP.KEwFWztwZ37-ZKTMcxuZuAHaHa?w=512&h=512&rs=1&pid=ImgDetMain' }}" 
                 alt="User" 
                 class="w-10 h-10 rounded-full border border-gray-300"
             />
-        </div>        
+        </div>
+                
     </div>
+
+
+     <!-- Notification Modal -->
+    <div id="notifModal" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden flex items-start justify-end px-6 pt-24">
+        <div class="bg-white w-full max-w-md rounded-lg shadow-lg overflow-y-auto max-h-[80vh] p-4 relative">
+            <!-- Close Button -->
+            <button onclick="document.getElementById('notifModal').classList.add('hidden')" class="absolute top-2 right-2 text-gray-600 hover:text-red-500">
+                <i class="ri-close-line text-xl"></i>
+            </button>
+
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">📢 Notifications</h3>
+
+            @forelse($notifications as $notif)
+                <div class="border border-gray-200 rounded-md p-3 mb-3 shadow-sm">
+                    <p class="text-sm text-gray-700 mb-2">
+                        {{ Auth::user()->role == 'head' 
+                            ? "Order from: " . $notif->user->name 
+                            : "New order requires acknowledgment from: " . $notif->user->name }}
+                    </p>
+
+                    <!-- PDF Preview Button -->
+                    <a href="{{ route('orders.previewPdf', $notif->product_id) }}"
+                    target="_blank"
+                    class="inline-flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white font-medium text-sm px-3 py-1.5 rounded-lg shadow">
+                        📄 PDF Order
+                    </a>
+
+                    <!-- Action Buttons -->
+                    @if(Auth::user()->role == 'head')
+                        <form action="{{ route('orders.approve', $notif->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="ml-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 text-sm rounded-lg">
+                                ✅ Approve
+                            </button>
+                        </form>
+                        <form action="{{ route('orders.reject', $notif->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="ml-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 text-sm rounded-lg">
+                                ❌ Reject
+                            </button>
+                        </form>
+                    @elseif(Auth::user()->role == 'sarpras')
+                        <form action="{{ route('orders.acknowledge', $notif->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 text-sm rounded-lg">
+                                👀 Acknowledge
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            @empty
+                <p class="text-sm text-gray-600">No new notifications.</p>
+            @endforelse
+        </div>
+    </div>
+
 
     <!-- Overlay -->
     <div id="overlay" class="overlay"></div>
