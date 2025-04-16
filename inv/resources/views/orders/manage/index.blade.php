@@ -6,7 +6,7 @@
 
     {{-- Filter Form --}}
     <form method="GET" class="flex flex-wrap gap-4 mb-6 bg-white p-4 rounded shadow">
-        <div class="w-full md:w-1/4">
+        <div class="w-full sm:w-full md:w-1/4">
             <label class="block text-sm font-medium mb-1">Produk</label>
             <select name="product_id" class="w-full border rounded px-3 py-2">
                 <option value="">Semua Produk</option>
@@ -19,7 +19,7 @@
         </div>
 
         @if(in_array($user->role, ['admin', 'sarpras']))
-        <div class="w-full md:w-1/4">
+        <div class="w-full sm:w-full md:w-1/4">
             <label class="block text-sm font-medium mb-1">Ka. Unit</label>
             <select name="kaunit_id" class="w-full border rounded px-3 py-2">
                 <option value="">Semua Ka. Unit</option>
@@ -32,7 +32,7 @@
         </div>
         @endif
 
-        <div class="w-full md:w-1/4">
+        <div class="w-full sm:w-full md:w-1/4">
             <label class="block text-sm font-medium mb-1">Status</label>
             <select name="filter" class="w-full border rounded px-3 py-2">
                 <option value="">Semua</option>
@@ -42,7 +42,7 @@
             </select>
         </div>
 
-        <div class="w-full md:w-1/4 flex items-end">
+        <div class="w-full sm:w-full md:w-1/4 flex items-end">
             <button class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Terapkan Filter</button>
         </div>
     </form>

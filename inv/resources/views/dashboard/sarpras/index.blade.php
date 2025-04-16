@@ -17,13 +17,13 @@
 
 <div class="container mx-auto px-4">
     <div class="bg-white shadow-md rounded-lg p-6 mt-5">
-        <div class="flex justify-between items-center mb-4">
-            <div>
+        <div class="flex justify-between items-center mb-4 flex-col sm:flex-row">
+            <div class="mb-4 sm:mb-0">
                 <h2 class="text-lg font-bold text-gray-700">Data Sarpras</h2>
                 <a href="/input-sarpras" class="mt-2 inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">Tambah Sarpras</a>
             </div>
-            <form method="get" action="/sarpras" class="flex items-center">
-                <input id="search" name="search" class="border p-2 rounded-l text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" placeholder="Cari sarpras...">
+            <form method="get" action="/sarpras" class="flex items-center w-full sm:w-auto">
+                <input id="search" name="search" class="border p-2 rounded-l text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full sm:w-64" type="text" placeholder="Cari sarpras...">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700 transition">Cari</button>
             </form>
         </div>
@@ -122,6 +122,5 @@
         }
     });
 </script>
-
 
 @endsection

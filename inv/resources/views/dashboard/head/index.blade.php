@@ -15,15 +15,15 @@
     </script>
 @endif
 
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-white shadow-md rounded-lg p-6 mt-5">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
             <div>
                 <h2 class="text-lg font-bold text-gray-700">Data Kepala Unit</h2>
                 <a href="/input-kepala" class="mt-2 inline-block bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">Tambah Kepala</a>
             </div>
-            <form method="get" action="/kepala-unit" class="flex items-center">
-                <input id="search" name="search" class="border p-2 rounded-l text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" type="text" placeholder="Cari kepala...">
+            <form method="get" action="/kepala-unit" class="flex items-center mt-4 sm:mt-0">
+                <input id="search" name="search" class="border p-2 rounded-l text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-full sm:w-auto" type="text" placeholder="Cari kepala...">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r hover:bg-blue-700 transition">Cari</button>
             </form>
         </div>
