@@ -89,12 +89,13 @@
     <div class="mt-5 grid grid-cols-1 md:grid-cols-5 gap-6">
         {{-- 📊 Charts Container (3/5 width) --}}
         <div class="md:col-span-3 bg-white rounded-lg shadow-lg p-6">
-            <div class="flex justify-between items-center border-b pb-3 mb-5">
-                <h1 class="text-gray-700 font-bold text-xl">📊 Analisis Produk</h1>
-    
-                <div class="flex gap-3">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-3 mb-5 gap-3">
+                <h1 class="text-gray-700 font-bold text-xl whitespace-nowrap">📊 Analisis Produk</h1>
+            
+                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2 w-full sm:w-auto">
                     {{-- Product Selection Dropdown --}}
-                    <select id="productSelector" class="form-select w-48 border rounded-md px-2 py-1 hidden">
+                    <select id="productSelector"
+                        class="form-select border rounded-md px-2 py-1 w-full sm:w-48 {{ count($products) > 0 ? '' : 'hidden' }}">
                         <option value="">Semua Produk</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" {{ $selectedProductId == $product->id ? 'selected' : '' }}>
@@ -102,9 +103,9 @@
                             </option>
                         @endforeach
                     </select>
-    
+            
                     {{-- Chart Type Dropdown --}}
-                    <select id="chartSelector" class="form-select w-48 border rounded-md px-2 py-1">
+                    <select id="chartSelector" class="form-select border rounded-md px-2 py-1 w-full sm:w-48">
                         <option value="stockTrends">Pergerakan Stok</option>
                         <option value="supplyTypesDistribution">Distribusi Pasokan</option>
                         <option value="categoryStock">Distribusi Kategori</option>
@@ -113,6 +114,7 @@
                     </select>
                 </div>
             </div>
+            
     
             {{-- Chart Canvas --}}
             <div class="w-full h-96">
