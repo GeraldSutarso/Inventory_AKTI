@@ -116,6 +116,21 @@
                 @enderror
             </div>
 
+            <!-- Unit Barang -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600" for="unit">Unit Barang</label>
+                <input name="unit" 
+                    value="{{ old('unit', $product->unit ?? '') }}" 
+                    class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-gray-300 focus:outline-none @error('unit') border-red-400 @enderror" 
+                    id="unit" 
+                    type="text"
+                    placeholder="Contoh: pcs, box, liter"
+                    required>
+                @error('unit')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Action Buttons -->
             <div class="mt-6 flex space-x-4">
                 <button type="submit" class="w-full bg-gray-700 text-white py-2 px-4 rounded-lg shadow-md hover:bg-gray-800 transition">

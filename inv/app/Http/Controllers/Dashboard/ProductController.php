@@ -128,6 +128,7 @@ class ProductController extends Controller
             'category_id' => ['required'],
             'stock_min' => ['required', 'integer', 'min:0'],
             'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
+            'unit' => ['required', 'string', 'max:50'],
         ]);
 
         // Create the product first to get its ID
@@ -139,6 +140,7 @@ class ProductController extends Controller
             'stock_min' => $request->stock_min,
             'stock_max' => $request->stock_max,
             'image' => '', // Temporary placeholder
+            'unit' => $request->unit,
         ]);
 
         // Define paths
@@ -189,6 +191,7 @@ class ProductController extends Controller
             'category_id' => ['required'],
             'stock_min' => ['required', 'integer', 'min:0'],
             'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
+            'unit' => ['required'],
             'image' => ['nullable', 'image', 'max:1024']
         ]);
 
@@ -222,6 +225,7 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->stock_min = $request->stock_min;
         $product->stock_max = $request->stock_max;
+        $product->unit = $request->unit;
         $product->save();
 
         ProductActivity::create([
@@ -234,7 +238,7 @@ class ProductController extends Controller
         ]);
         
 
-        return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
+        return redirect()->route('barang.index')->with('message', 'Berhasil memperbarui data');
     }
 
     public function updateStock(Request $request, $id)
