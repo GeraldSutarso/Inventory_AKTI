@@ -122,7 +122,8 @@ class OverviewController extends Controller
             ->where('stock', '>', 0)
             ->get();
         $overStockProducts = Product::whereColumn('stock', '>', 'stock_max')->get();
-        $normalStockProducts = Product::whereBetween('stock', ['stock_min', 'stock_max'])
+        $normalStockProducts = Product::whereColumn('stock', '>=', 'stock_min')
+            ->whereColumn('stock', '<=', 'stock_max')
             ->where('stock', '>', 0)
             ->get();
 
