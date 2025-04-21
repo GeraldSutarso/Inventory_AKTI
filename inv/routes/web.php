@@ -13,6 +13,7 @@ use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ExportPDFController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderManagementController;
+use App\Http\Controllers\Dashboard\UserManagementController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -147,4 +148,17 @@ Route::middleware(['auth'])->prefix('orders/manage')->name('orders.manage.')->gr
     Route::post('{order}/approve', [OrderManagementController::class, 'approve'])->name('approve');
     Route::post('{order}/reject', [OrderManagementController::class, 'reject'])->name('reject');
     Route::post('{order}/acknowledge', [OrderManagementController::class, 'acknowledge'])->name('acknowledge');
+});
+
+// Admin & Petugas Routes - Single Route Group for All User Types
+Route::middleware('role:admin')->group(function () {
+
+    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::get('/users/{id}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserManagementController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/upload-ttd', [UserManagementController::class, 'uploadTtd'])->name('users.upload.ttd');
+
 });

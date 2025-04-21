@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 
 class ProductController extends Controller
@@ -24,7 +25,7 @@ class ProductController extends Controller
     {
         $query = Product::with('category'); // Eager load the related category
 
-        // 🔍 Search
+        //  Search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -119,59 +120,50 @@ class ProductController extends Controller
     ]);
 }
 
-    public function store(Request $request)
-    {
-        $validated = $this->validate($request, [
-            'name' => ['required'],
-            'price' => ['required'],
-            'image' => ['required', 'image', 'max:1024'],
-            'category_id' => ['required'],
-            'stock_min' => ['required', 'integer', 'min:0'],
-            'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
-            'unit' => ['required', 'string', 'max:50'],
-        ]);
+public function store(Request $request)
+{
+    $validated = $this->validate($request, [
+        'name' => ['required'],
+        'price' => ['required'],
+        'image' => ['required', 'image', 'max:1024'],
+        'category_id' => ['required'],
+        'stock_min' => ['required', 'integer', 'min:0'],
+        'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
+        'unit' => ['required', 'string', 'max:50'],
+    ]);
 
-        // Create the product first to get its ID
-        $product = Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'category_id' => $request->category_id,
-            'stock' => $request->stock ?? 0,
-            'stock_min' => $request->stock_min,
-            'stock_max' => $request->stock_max,
-            'image' => '', // Temporary placeholder
-            'unit' => $request->unit,
-        ]);
+    // Create the product first to get its ID
+    $product = Product::create([
+        'name' => $request->name,
+        'price' => $request->price,
+        'category_id' => $request->category_id,
+        'stock' => $request->stock ?? 0,
+        'stock_min' => $request->stock_min,
+        'stock_max' => $request->stock_max,
+        'image' => '', // Temporary placeholder
+        'unit' => $request->unit,
+    ]);
 
-        // Define paths
-        $productDir = 'products/' . $product->id;
-        $imageDir = $productDir . '/product-img'; // e.g., public/products/1/product-img
+    // Define paths
+    $productDir = 'products/' . $product->id;
+    $imageDir = public_path('../public_html/' . $productDir . '/product-img'); // Use public_html directory
 
-        // Create directory if it doesn't exist
-        if (!file_exists(public_path($imageDir))) {
-            mkdir(public_path($imageDir), 0755, true);
-        }
-
-        // Move the uploaded image
-        $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-        $request->file('image')->move(public_path($imageDir), $imageName);
-
-        // Update the product's image path
-        $product->image = $imageDir . '/' . $imageName;
-        $product->save();
-
-        ProductActivity::create([
-            'user_id' => Auth::id(),
-            'user_name' => Auth::user()->name,
-            'product_id' => $product->id,
-            'product_name' => $product->name,
-            'action' => 'create',
-            'description' => 'Menambahkan produk baru: ' . $product->name,
-        ]);
-        
-        return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
+    // Create directory if it doesn't exist
+    if (!file_exists($imageDir)) {
+        mkdir($imageDir, 0755, true);
     }
-    
+
+    // Move the uploaded image
+    $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+    $request->file('image')->move($imageDir, $imageName);
+
+    // Update the product's image path
+    $product->image = 'products/' . $product->id . '/product-img/' . $imageName;
+    $product->save();
+
+    return redirect()->route('barang.index')->with('message', 'Berhasil menambahkan data');
+}
+
 
     public function edit($id)
     {
@@ -183,63 +175,55 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
-    {
-        $validated = $this->validate($request, [
-            'name' => ['required'],
-            'price' => ['required'],
-            'category_id' => ['required'],
-            'stock_min' => ['required', 'integer', 'min:0'],
-            'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
-            'unit' => ['required'],
-            'image' => ['nullable', 'image', 'max:1024']
-        ]);
+public function update(Request $request, $id)
+{
+    $validated = $this->validate($request, [
+        'name' => ['required'],
+        'price' => ['required'],
+        'category_id' => ['required'],
+        'stock_min' => ['required', 'integer', 'min:0'],
+        'stock_max' => ['required', 'integer', 'min:0', 'gt:stock_min'],
+        'unit' => ['required'],
+        'image' => ['nullable', 'image', 'max:1024']
+    ]);
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if (file_exists(public_path($product->image))) {
-                unlink(public_path($product->image));
-            }
-
-            // Define new paths
-            $productDir = 'products/' . $product->id;
-            $imageDir = $productDir . '/product-img';
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-
-            // Create directory if it doesn't exist
-            if (!file_exists(public_path($imageDir))) {
-                mkdir(public_path($imageDir), 0755, true);
-            }
-
-            // Move new image
-            $request->file('image')->move(public_path($imageDir), $imageName);
-
-            // Update image path
-            $product->image = $imageDir . '/' . $imageName;
+    if ($request->hasFile('image')) {
+        // Delete old image
+        if (file_exists(public_path('../public_html/' . $product->image))) {
+            unlink(public_path('../public_html/' . $product->image));
         }
 
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->category_id = $request->category_id;
-        $product->stock_min = $request->stock_min;
-        $product->stock_max = $request->stock_max;
-        $product->unit = $request->unit;
-        $product->save();
+        // Define new paths
+        $productDir = 'products/' . $product->id;
+        $imageDir = public_path('../public_html/' . $productDir . '/product-img');
+        $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
 
-        ProductActivity::create([
-            'user_id' => Auth::id(),
-            'user_name' => Auth::user()->name,
-            'product_id' => $product->id,
-            'product_name' => $product->name,
-            'action' => 'update',
-            'description' => 'Mengupdate produk: ' . $product->name,
-        ]);
-        
+        // Create directory if it doesn't exist
+        if (!file_exists($imageDir)) {
+            mkdir($imageDir, 0755, true);
+        }
 
-        return redirect()->route('barang.index')->with('message', 'Berhasil memperbarui data');
+        // Move new image
+        $request->file('image')->move($imageDir, $imageName);
+
+        // Update image path
+        $product->image = 'products/' . $product->id . '/product-img/' . $imageName;
     }
+
+    // Update other product fields
+    $product->name = $request->name;
+    $product->price = $request->price;
+    $product->category_id = $request->category_id;
+    $product->stock_min = $request->stock_min;
+    $product->stock_max = $request->stock_max;
+    $product->unit = $request->unit;
+    $product->save();
+
+    return redirect()->route('barang.index')->with('message', 'Berhasil memperbarui data');
+}
+
 
     public function updateStock(Request $request, $id)
     {
@@ -311,54 +295,63 @@ class ProductController extends Controller
         return Excel::download(new ProductExport, 'product.xlsx');
     }
 
-    public function generateQR($id)
-    {
-        $product = Product::findOrFail($id);
+public function generateQR($id)
+{
+    $product = Product::findOrFail($id);
 
-        // Define paths
-        $qrCodeDir = 'products/' . $product->id . '/qr-codes'; // e.g., storage/app/public/products/1/qr-codes
-        $qrCodePath = $qrCodeDir . '/product-' . $product->id . '.png';
+    // Define relative and full path
+    $qrCodeRelativePath = 'products/' . $product->id . '/qrcodes';
+    $fileName = 'product-' . $product->id . '.png';
+    $fullPath = base_path('public_html/' . $qrCodeRelativePath . '/' . $fileName); // <-- Adjusted here
 
-        // Create directory if it doesn't exist
-        Storage::disk('public')->makeDirectory($qrCodeDir);
+    // Create directory if it doesn't exist
+    if (!file_exists(dirname($fullPath))) {
+        mkdir(dirname($fullPath), 0755, true);
+    }
 
-        // Generate and save QR code
-        $qrCode = QrCode::format('png')
+    // Generate QR code
+    $qrCode = \QrCode::format('png')
         ->size(200)
         ->generate(route('hasil.show', $product->id));
-    
 
-        Storage::disk('public')->put($qrCodePath, $qrCode);
+    // Save the QR code as a file
+    file_put_contents($fullPath, $qrCode);
 
-        // Update the database
-        $product->qr_code = $qrCodePath;
-        $product->save();
+    // Save relative path to database (relative from public_html root)
+    $product->qr_code = $qrCodeRelativePath . '/' . $fileName;
+    $product->save();
 
-        return back()->with('message', 'QR Code berhasil dibuat!');
-    }
+    return back()->with('message', 'QR Code berhasil dibuat!');
+}
 
-    public function showHasil($id)
-    {
-        $product = Product::findOrFail($id);
-        return view('hasil.show', compact('product'));
-    }
-    
-    public function downloadQR($id)
-    {
-        $product = Product::findOrFail($id);
 
-        if (!$product->qr_code) {
-            return redirect()->back()->with('error', 'QR Code tidak ditemukan.');
+        public function showHasil($id)
+        {
+            $product = Product::findOrFail($id);
+            return view('hasil.show', compact('product'));
         }
 
-        $filePath = storage_path('app/public/' . $product->qr_code);
+public function downloadQR($id)
+{
+    $product = Product::findOrFail($id);
 
-        if (!file_exists($filePath)) {
-            return redirect()->back()->with('error', 'File QR Code tidak ditemukan.');
-        }
-
-        return response()->download($filePath, 'QR_' . $product->name . '.png');
+    // Check if QR Code path is stored
+    if (!$product->qr_code) {
+        return redirect()->back()->with('error', 'QR Code tidak ditemukan.');
     }
+
+    // Adjust to point to public_html instead of default public/
+    $filePath = base_path('public_html/' . $product->qr_code);
+
+    if (!file_exists($filePath)) {
+        return redirect()->back()->with('error', 'File QR Code tidak ditemukan.');
+    }
+
+    return response()->download($filePath, 'QR_' . $product->name . '.png');
+}
+
+
+
 
     // Method to check stock status for color coding
     public function getStockStatus($product)

@@ -46,5 +46,9 @@ class AppServiceProvider extends ServiceProvider
                  ->with('unreadCount', $notifications->count());
         }
     });
+      
+              $this->app->bind('path.public', function () {
+            return base_path('public_html');
+        });
     }
 }
