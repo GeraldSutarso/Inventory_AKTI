@@ -349,10 +349,11 @@
             <li><a href="/orders/manage"><i class="ri-file-list-3-line"></i>Manajemen Order</a></li>
 
             @if(Auth::user()->role === 'admin')
-            <li><a href="/sarpras"><i class="ri-user-line"></i>Data Petugas Sarpras</a></li>
+            {{-- <li><a href="/sarpras"><i class="ri-user-line"></i>Data Petugas Sarpras</a></li>
             <li><a href="/kepala-unit"><i class="ri-user-line"></i>Data Kepala Unit</a></li>
             <li><a href="/petugas"><i class="ri-user-line"></i>Data Petugas</a></li>
-            <li><a href="/admin"><i class="ri-admin-line"></i>Data Admin</a></li>
+            <li><a href="/admin"><i class="ri-admin-line"></i>Data Admin</a></li> --}}
+            <li><a href="/users"><i class="ri-user-line"></i>Data User</a></li>
             @endif
             <li>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#bugReportModal">

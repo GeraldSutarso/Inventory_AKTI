@@ -259,7 +259,7 @@
 </div>
   
 <!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+{{-- <div id="deleteModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-6">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Penghapusan</h3>
@@ -281,7 +281,7 @@
             </button>
         </div>
     </div>
-</div>
+</div> --}}
 
 @endsection
 
@@ -298,13 +298,14 @@
         });
     }, 3000);
 
-    // Order Modal functionality
-    document.getElementById('openOrderModal').addEventListener('click', function () {
-        document.getElementById('orderModal').classList.remove('hidden');
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('openOrderModal').addEventListener('click', function () {
+            document.getElementById('orderModal').classList.remove('hidden');
+        });
 
-    document.getElementById('closeModal').addEventListener('click', function () {
-        document.getElementById('orderModal').classList.add('hidden');
+        document.getElementById('closeModal').addEventListener('click', function () {
+            document.getElementById('orderModal').classList.add('hidden');
+        });
     });
 
     // Delete Product Functionality
