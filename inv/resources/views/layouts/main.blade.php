@@ -355,9 +355,14 @@
             <li><a href="/admin"><i class="ri-admin-line"></i>Data Admin</a></li> --}}
             <li><a href="/users"><i class="ri-user-line"></i>Data User</a></li>
             @endif
+
+            <!-- Fitur Buku Panduan -->
+            <li><a href="{{ asset('files/buku_panduan.pdf') }}" class="btn btn-outline-primary mb-2" download>
+                <i class="ri-git-repository-line"></i> Buku Panduan
+            </a></li>
             <li>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#bugReportModal">
-                    <i class="ri-bug-line"></i>Laporkan Bug
+                    <i class="ri-bug-line"></i>Laporkan Bug 
                 </a>
             </li>
         </ul>
